@@ -1,18 +1,25 @@
 package summary
 
 import (
+	"context"
 	"fmt"
 
 	"vts-tokenmaxers/apps/server/internal/domain"
 )
 
-func Incident(senderID string, evidence []domain.Broadcast) domain.IncidentSummaryResponse {
+type Analyzer interface {
+	Analyze(context.Context, string, []domain.Broadcast) (domain.IncidentSummaryResponse, error)
+}
+
+type StubAnalyzer struct{}
+
+func (StubAnalyzer) Analyze(_ context.Context, senderID string, evidence []domain.Broadcast) (domain.IncidentSummaryResponse, error) {
 	return domain.IncidentSummaryResponse{
 		SenderID:    senderID,
 		Source:      "fallback",
 		EvidenceIDs: evidenceIDs(evidence),
 		Summary:     fallbackText(senderID, evidence),
-	}
+	}, nil
 }
 
 func fallbackText(senderID string, evidence []domain.Broadcast) string {

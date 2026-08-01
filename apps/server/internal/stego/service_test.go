@@ -74,6 +74,27 @@ func TestParseLaunchArgsRejectsUnfinishedQuote(t *testing.T) {
 	}
 }
 
+func TestNewFromEnvDefaultsToDisabledAndIgnoresModelConfiguration(t *testing.T) {
+	t.Setenv("STEGANOGRAPHY_ENABLED", "false")
+	t.Setenv("STEGANOGRAPHY_MODEL_COMMAND", "/definitely/not/a/model")
+	t.Setenv("STEGANOGRAPHY_MODEL_ARGS", `"unfinished`)
+	service, err := NewFromEnv(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if service.Status().Configured {
+		t.Fatal("disabled service reported itself configured")
+	}
+}
+
+func TestNewFromEnvRequiresCommandWhenEnabled(t *testing.T) {
+	t.Setenv("STEGANOGRAPHY_ENABLED", "true")
+	t.Setenv("STEGANOGRAPHY_MODEL_COMMAND", "")
+	if _, err := NewFromEnv(context.Background()); err == nil || !strings.Contains(err.Error(), "STEGANOGRAPHY_MODEL_COMMAND") {
+		t.Fatalf("error = %v; want required command error", err)
+	}
+}
+
 func TestConversationServiceRoundTrip(t *testing.T) {
 	service, err := NewConversationService(deterministicModel{}, nil, conversationstenography.GenerativeConfig{
 		Prompt: "Test prompt", TopN: 8, Coding: "uniform", Temperature: 1, StrictStyle: false, CarrierTrials: 1,

@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "go run .",
+    "dev:data": "STEGANOGRAPHY_ENABLED=false go run .",
+    "import:data": "go run ./cmd/importdata",
     "build": "go build -o bin/server .",
     "typecheck": "go test ./... && go -C conversationstenography test ./...",
     "start": "./bin/server"

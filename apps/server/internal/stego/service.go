@@ -99,9 +99,16 @@ type ConversationService struct {
 }
 
 func NewFromEnv(ctx context.Context) (Service, error) {
+	enabled, err := envBool("STEGANOGRAPHY_ENABLED", false)
+	if err != nil {
+		return nil, err
+	}
+	if !enabled {
+		return DisabledService{}, nil
+	}
 	command := strings.TrimSpace(os.Getenv("STEGANOGRAPHY_MODEL_COMMAND"))
 	if command == "" {
-		return DisabledService{}, nil
+		return nil, errors.New("STEGANOGRAPHY_MODEL_COMMAND is required when STEGANOGRAPHY_ENABLED=true")
 	}
 
 	args, err := parseLaunchArgs(os.Getenv("STEGANOGRAPHY_MODEL_ARGS"))

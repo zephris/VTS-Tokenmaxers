@@ -1,60 +1,70 @@
 # Conversation Steganography Integration
 
-Source repository: https://github.com/nethical6/conversation-steganography
+Source: <https://github.com/nethical6/conversation-steganography>
 
 ## Architecture
 
-The backend uses Option A: the upstream Go core lives in `apps/server/conversationstenography` as a separate nested Go module. The server module imports it through a local `replace` directive, launches one persistent Python model process at startup, and reuses that warm model for every request.
-
-Each encode/decode request supplies the shared phrase and all public records that precede the new message. The server derives the key, reconstructs a temporary `ConversationChain`, performs the operation, and discards the chain and key. The shared phrase is not written to server state or logs.
+The upstream Go core remains a separate nested module at `apps/server/conversationstenography`. The server imports it through a local `replace`, launches one persistent Python model process at startup, and serializes encode/decode work through that warm process.
 
 ```text
-web client -> Go API -> ConversationChain -> persistent ProcessModel -> local Python model
+Vue client -> Go API -> temporary ConversationChain -> persistent Python model
+                    -> SQLite public transcript
 ```
 
-The upstream package serializes calls to the model process. This is appropriate for the initial single-worker hackathon deployment; higher concurrency will need a pool of model workers.
+For each operation, the server loads the ordered public records for `(conversationId, stationId)` from SQLite, derives a key from the request's shared phrase, constructs a short-lived chain, and discards the chain and key after the request. Only a successful operation appends a public record.
 
-## Server Configuration
+SQLite may contain conversation IDs, station IDs, sequence information, sender names, model/protocol identity, and exact carrier text. It must never contain the shared phrase, derived key, source plaintext, or recovered plaintext.
 
-The Go server loads `apps/server/.env` on startup without overriding variables already present in the process environment. Set a different file with `ENV_FILE`.
+## Availability and Configuration
 
-Start from `apps/server/.env.example`. The launch settings are:
+`STEGANOGRAPHY_ENABLED=false` is a supported mode. Steganography endpoints return `503`, while health, dashboard, archive, and deterministic incident-analysis endpoints continue working.
 
-- `STEGANOGRAPHY_MODEL_COMMAND`: executable used to start the model, normally `python3`. If omitted, the steganography endpoints return `503` while the rest of the API remains available.
-- `STEGANOGRAPHY_MODEL_ARGS`: either a shell-style argument string or, preferably, a JSON string array. The example launches the bundled Hugging Face adapter with GPT-2.
-- `STEGANOGRAPHY_*` protocol settings: prompt, coding mode, candidate counts, temperature, style checks, and generation limits.
+When enabled, `STEGANOGRAPHY_MODEL_COMMAND` identifies the local Python interpreter and `STEGANOGRAPHY_MODEL_ARGS` supplies a JSON array (preferred) or shell-style argument string. The bundled Hugging Face adapter uses GPT-2 by default. The model fingerprint is exposed by health/status data so clients can detect incompatible participants.
 
-The model, exact model revision, tokenizer, and all protocol settings must match between participants. The health endpoint reports the model fingerprint so clients can compare it.
+All `STEGANOGRAPHY_*` protocol settings, model revision, tokenizer, and dependency versions must match between participants. Do not silently change these values during an active conversation.
+
+See [local-demo.md](local-demo.md) for setup and preflight commands.
 
 ## API Contract
+
+All steganography routes require `Authorization: Bearer <station session token>`. Create that token through `POST /api/auth/login` with a station account before calling the examples below.
 
 `POST /api/steganography/encode` accepts:
 
 ```json
 {
   "conversationId": "team-chat",
+  "stationId": "station-a",
   "sender": "alice",
   "secretPhrase": "a shared phrase at least 16 characters long",
-  "plaintext": "Meet at the usual place.",
-  "records": []
+  "plaintext": "Meet at the usual place."
 }
 ```
 
-It returns the original `plaintext`, generated `carrierText`, the new `record`, the complete updated `records` transcript, and a `syncCode`.
+The server loads Station A's public transcript, creates a carrier, persists the new public record, and returns the exact `carrierText`, record/transcript metadata, synchronization code, and algorithm identity. Plaintext may be echoed to the requesting client for the local demo but is not stored.
 
-`POST /api/steganography/decode` accepts the same conversation details and prior `records`, replacing `plaintext` with the exact unedited `carrierText`. It returns the recovered `plaintext` and updated public transcript.
+`POST /api/steganography/decode` accepts the same identity fields, replacing `plaintext` with the exact unedited `carrierText`. The recovered plaintext is returned only to the requesting client. A successful decode appends the carrier record to that station's public transcript.
 
-For both endpoints, `records` means every accepted message before the message currently being encoded or decoded. Use the returned `records` array as the next request's input. The carrier text must not be trimmed, reformatted, or corrected.
+`GET /api/steganography/conversations/{conversationId}?stationId=station-a` returns that station's ordered public transcript. It never returns a phrase, key, or plaintext.
 
-## Security And Reliability
+The server, rather than the browser, owns transcript history. Clients must not send an editable `records` array. A duplicate or out-of-sequence operation is rejected without a partial database write.
 
-- The phrase is required for each request and is never returned. Production deployments should use TLS and avoid request-body logging at every proxy layer.
-- Message order, sender spelling, conversation ID, carrier text, model fingerprint, and protocol settings are authenticated synchronization state. A mismatch causes decoding to fail.
-- The public transcript is not secret and may be persisted client-side or in a database. It still needs integrity and ordering controls in a multi-user implementation.
-- The upstream project describes itself as a proof of concept. Treat it as experimental rather than audited cryptographic software.
+## Synchronization and Failure Rules
+
+- Carrier text is protocol data: never trim, normalize, reflow, spell-check, or otherwise modify it.
+- Record order, sender spelling, sender sequence, conversation ID, model fingerprint, tokenizer/model revision, and protocol settings are synchronization and authentication inputs.
+- A wrong phrase, altered carrier, incompatible model, or divergent transcript must fail explicitly; it must not be treated as a valid empty message.
+- Model launch or runtime errors must be actionable but must not include phrases, plaintext, keys, environment values, or request bodies.
+- The model is expensive to start and is intentionally reused. Do not launch a process per request.
+
+## Security Limitations
+
+This is experimental proof-of-concept steganography, not audited cryptographic software. Generated text may be detectable, and the application must not claim otherwise. Use TLS in any non-local environment and disable request-body logging at every proxy layer.
+
+The public transcript is intentionally not confidential, but its exact bytes, integrity, and order are security-relevant. Secret phrases belong only in request memory and, on the web client, the current tab's `sessionStorage`.
 
 ## License
 
-The upstream module is GPL-3.0 licensed. Its source, tests, Python adapters, upstream README, and license are preserved inside `apps/server/conversationstenography`.
+The nested module is GPL-3.0 licensed. Its source, tests, Python adapters, upstream README, source record, and license are preserved in `apps/server/conversationstenography`.
 
-Directly linking this module into the server may require the combined backend to comply with GPL-3.0 obligations when distributed. Confirm that this is acceptable before deployment. This note is not legal advice.
+Directly linking the module into the Go server may require the combined backend to comply with GPL-3.0 when distributed. Confirm those obligations before distribution or deployment. This is not legal advice.

@@ -59,12 +59,13 @@ Run `gofmt` on changed Go files. Do not commit generated directories such as `no
 - Use Vue 3 Composition API and the existing Naive UI and ECharts dependencies.
 - Match the current operational dashboard styling and interaction patterns.
 - Keep interfaces responsive and keyboard-accessible, and provide explicit loading, empty, success, and error states for network operations.
-- Do not expose secret phrases in URLs, browser logs, analytics, or persisted application state.
+- Keep secret phrases only in the current tab's `sessionStorage`. Never expose them in URLs, browser logs, analytics, durable `localStorage`, or server persistence.
 - The encrypted-chat workflow should make plaintext, generated carrier text, recovered plaintext, transcript synchronization, and model compatibility easy to inspect.
 
 ## Go Server Guidance
 
 - The server uses the standard `net/http` stack; do not reintroduce the deleted TypeScript/Express backend.
+- SQLite is the source of truth for imported station and broadcast data. Startup imports must remain transactional and idempotent so deleting the development database is recoverable.
 - Start the language-model process once and reuse it. Model startup is expensive, and the upstream `ProcessModel` serializes access internally.
 - Build a short-lived `ConversationChain` from the request's secret phrase and preceding public records. Do not retain plaintext passphrases or derived keys between requests.
 - Never trim, normalize, spell-check, or otherwise modify carrier text. Decoding requires the exact generated string.
