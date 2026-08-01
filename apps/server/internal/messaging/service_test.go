@@ -52,12 +52,16 @@ func TestServicePersistsOnlyPublicRecordsPerStation(t *testing.T) {
 	encoded, err := service.Encode(context.Background(), EncodeRequest{
 		ConversationID: "delta", StationID: "command", Sender: "Marv",
 		SecretPhrase: "a sufficiently long secret", Plaintext: "dispatch scout",
+		BroadcastType: "situation_report",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if encoded.StationID != "command" || encoded.ModelFingerprint != "fake-v1" {
 		t.Fatalf("unexpected response: %#v", encoded)
+	}
+	if encoded.Record.BroadcastType != "situation_report" || encoded.Record.CreatedAt == "" {
+		t.Fatalf("missing public broadcast metadata: %#v", encoded.Record)
 	}
 
 	snapshot, err := service.Conversation(context.Background(), "delta", "command")
@@ -66,6 +70,9 @@ func TestServicePersistsOnlyPublicRecordsPerStation(t *testing.T) {
 	}
 	if len(snapshot.Records) != 1 || snapshot.Records[0].CarrierText != "carrier:dispatch scout" {
 		t.Fatalf("unexpected transcript: %#v", snapshot)
+	}
+	if snapshot.Records[0].BroadcastType != "situation_report" || snapshot.Records[0].CreatedAt == "" {
+		t.Fatalf("missing persisted broadcast metadata: %#v", snapshot.Records[0])
 	}
 	other, err := service.Conversation(context.Background(), "delta", "outpost")
 	if err != nil {

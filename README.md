@@ -81,7 +81,8 @@ The steganography feature needs a local Hugging Face model. Set it up and run it
 ```bash
 python3 -m venv apps/server/.venv
 apps/server/.venv/bin/python -m pip install --upgrade pip
-apps/server/.venv/bin/python -m pip install torch transformers
+apps/server/.venv/bin/python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+apps/server/.venv/bin/python -m pip install transformers huggingface-hub
 cd apps/server
 printf '%s\n' '{"op":"info"}' | ./.venv/bin/python conversationstenography/python/hf_model.py --model gpt2 --revision main --device cpu --dtype float32
 ```

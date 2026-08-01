@@ -180,6 +180,8 @@ export interface SteganographyRecord {
   from: string;
   senderSequence: number;
   carrierText: string;
+  broadcastType?: BroadcastType;
+  createdAt?: string;
 }
 
 export interface SteganographyConversationResponse {
@@ -200,12 +202,14 @@ const steganographyBaseSchema = z.object({
 
 export const steganographyEncodeRequestSchema = steganographyBaseSchema.extend({
   plaintext: z.string().min(1).max(4000),
+  broadcastType: z.enum(broadcastTypes).optional(),
 });
 
 export type SteganographyEncodeRequest = z.infer<typeof steganographyEncodeRequestSchema>;
 
 export const steganographyDecodeRequestSchema = steganographyBaseSchema.extend({
   carrierText: z.string().min(1).max(32_000),
+  broadcastType: z.enum(broadcastTypes).optional(),
 });
 
 export type SteganographyDecodeRequest = z.infer<typeof steganographyDecodeRequestSchema>;

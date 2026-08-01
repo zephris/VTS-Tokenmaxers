@@ -53,6 +53,7 @@ def main():
     model.eval()
     resolved_revision = getattr(model.config, "_commit_hash", None) or args.revision
     identity = json.dumps({
+        "adapter": "hf-model-kv-cache-v1",
         "model": args.model,
         "revision": resolved_revision,
         "tokenizer": tokenizer.__class__.__name__,
@@ -68,6 +69,9 @@ def main():
         if token.startswith("<|") and token.endswith("|>"):
             special.add(token_id)
     token_text_cache = {}
+    cached_ids = []
+    cached_past = None
+    cached_logits = None
 
     def token_text(token_id):
         if token_id not in token_text_cache:
@@ -75,6 +79,31 @@ def main():
                 [token_id], skip_special_tokens=False, clean_up_tokenization_spaces=False
             )
         return token_text_cache[token_id]
+
+    def next_logits(ids):
+        nonlocal cached_ids, cached_past, cached_logits
+
+        extends_cache = (
+            cached_logits is not None
+            and len(ids) >= len(cached_ids)
+            and ids[:len(cached_ids)] == cached_ids
+        )
+        if extends_cache and len(ids) == len(cached_ids):
+            return cached_logits.clone()
+
+        if extends_cache:
+            input_ids = torch.tensor([ids[len(cached_ids):]], device=args.device)
+            past_key_values = cached_past
+        else:
+            input_ids = torch.tensor([ids], device=args.device)
+            past_key_values = None
+
+        with torch.inference_mode():
+            output = model(input_ids=input_ids, past_key_values=past_key_values, use_cache=True)
+        cached_ids = list(ids)
+        cached_past = output.past_key_values
+        cached_logits = output.logits[0, -1].float().clone()
+        return cached_logits.clone()
 
     for line in sys.stdin:
         try:
@@ -95,9 +124,7 @@ def main():
                 visible_tokens = request.get("visible_tokens")
                 if not ids:
                     raise ValueError("model context cannot be empty")
-                input_ids = torch.tensor([ids], device=args.device)
-                with torch.inference_mode():
-                    logits = model(input_ids=input_ids).logits[0, -1].float()
+                logits = next_logits(ids)
                 if special:
                     logits[list(special)] = -torch.inf
                 pool_n = top_n if visible_tokens is None else min(logits.shape[-1], top_n * 4)
