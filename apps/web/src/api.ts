@@ -1,4 +1,9 @@
-import type { DashboardResponse, IncidentSummaryResponse } from '@vts/common';
+import type {
+  DashboardResponse,
+  IncidentSummaryResponse,
+  StationBroadcastsResponse,
+  StationsResponse,
+} from '@vts/common';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
 
@@ -18,5 +23,13 @@ export function fetchIncidentSummary(senderId: string): Promise<IncidentSummaryR
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ senderId }),
   });
+}
+
+export function fetchStations(): Promise<StationsResponse> {
+  return request('/api/stations');
+}
+
+export function fetchStationBroadcasts(senderId: string): Promise<StationBroadcastsResponse> {
+  return request(`/api/stations/${encodeURIComponent(senderId)}/broadcasts`);
 }
 

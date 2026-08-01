@@ -56,3 +56,39 @@ export interface IncidentSummaryResponse {
   evidenceIds: string[];
 }
 
+export type SenderType = 'robot_outpost' | 'relay_identity' | 'junior_scout_group';
+
+export interface Station {
+  senderId: string;
+  senderType: SenderType;
+  location: string;
+  firstSeen: string | null;
+  lastSeen: string | null;
+  totalBroadcasts: number;
+  broadcastsVerifiedAccurate: number;
+  broadcastsVerifiedFalse: number;
+  reliabilityScore: number;
+  currentStatus: SenderStatus;
+  derived: boolean;
+}
+
+export interface StationsResponse {
+  stations: Station[];
+}
+
+export interface StationBroadcastsResponse {
+  senderId: string;
+  broadcasts: Broadcast[];
+}
+
+export type ServerMode = 'full' | 'dataset-only';
+
+export interface HealthResponse {
+  ok: boolean;
+  mode: ServerMode;
+  counts: {
+    stations: number;
+    broadcasts: number;
+  };
+}
+

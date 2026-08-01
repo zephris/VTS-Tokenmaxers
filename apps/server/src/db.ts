@@ -9,80 +9,28 @@ import type {
   OutpostSummary,
   RiskLevel,
   SenderStatus,
+  Station,
+  SenderType,
 } from '@vts/common';
+import { importDataset } from './import.js';
 
-const databasePath = path.resolve(process.env.DATABASE_PATH ?? './data/silent-outposts.db');
-fs.mkdirSync(path.dirname(databasePath), { recursive: true });
-const db = new Database(databasePath);
-
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS senders (
-    sender_id TEXT PRIMARY KEY,
-    sender_type TEXT NOT NULL,
-    location TEXT NOT NULL,
-    reliability_score INTEGER NOT NULL,
-    current_status TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS broadcasts (
-    broadcast_id TEXT PRIMARY KEY,
-    timestamp TEXT NOT NULL,
-    sender_id TEXT NOT NULL,
-    location TEXT NOT NULL,
-    broadcast_type TEXT NOT NULL,
-    message_text TEXT,
-    signal_strength INTEGER,
-    cross_check_status TEXT NOT NULL,
-    label TEXT NOT NULL,
-    FOREIGN KEY (sender_id) REFERENCES senders(sender_id)
-  );
-`);
-
-const seed = db.transaction(() => {
-  const insertSender = db.prepare(`
-    INSERT OR IGNORE INTO senders
-      (sender_id, sender_type, location, reliability_score, current_status)
-    VALUES (?, ?, ?, ?, ?)
-  `);
-
-  const senders = [
-    ['Outpost-Alpha', 'robot_outpost', 'Sunken Garden', 92, 'active'],
-    ['Outpost-Beta', 'robot_outpost', 'Robotics Workshop', 85, 'active'],
-    ['Outpost-Gamma', 'robot_outpost', 'Prescott Court', 88, 'active'],
-    ['Outpost-Delta', 'robot_outpost', 'Guild Village', 90, 'gone_quiet'],
-    ['Mini-Marv-01', 'junior_scout_group', 'Mobile', 88, 'active'],
-    ['New Meridian', 'relay_identity', 'Unknown', 5, 'suspected_compromised'],
-  ] as const;
-
-  for (const sender of senders) insertSender.run(...sender);
-
-  const insertBroadcast = db.prepare(`
-    INSERT OR IGNORE INTO broadcasts
-      (broadcast_id, timestamp, sender_id, location, broadcast_type, message_text,
-       signal_strength, cross_check_status, label)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
-  const broadcasts = [
-    ['BC-003', '2026-07-10 14:05', 'Outpost-Delta', 'Guild Village', 'routine_check', 'Guild Village quiet. Supplies stable.', 55, 'verified', 'genuine'],
-    ['BC-010', '2026-07-13 06:45', 'Outpost-Delta', 'Guild Village', 'routine_check', 'Guild Village status unchanged. Low peacock sightings.', 51, 'verified', 'genuine'],
-    ['BC-019', '2026-07-16 10:05', 'Mini-Marv-01', 'Guild Village', 'emergency', 'Attempting contact with Outpost-Delta. No response for 48 hours.', null, 'unconfirmed', 'genuine'],
-    ['BC-021', '2026-07-17 05:50', 'Outpost-Gamma', 'Prescott Court', 'emergency', 'Urgent: peacock swarm breaching Prescott Court perimeter.', 44, 'not_checked', 'genuine'],
-    ['BC-035', '2026-07-22 11:05', 'New Meridian', 'Guild Village', 'all_clear', 'Guild Village confirmed clear. Outpost-Delta concerns overstated.', 87, 'disputed', 'peacock_spoofed'],
-    ['BC-036', '2026-07-22 12:00', 'Mini-Marv-01', 'Guild Village', 'emergency', 'Still no contact with Outpost-Delta. The all-clear cannot be confirmed.', null, 'not_checked', 'genuine'],
-    ['BC-038', '2026-07-22 12:30', 'Outpost-Alpha', 'Sunken Garden', 'routine_check', 'Scheduled check-in complete.', 61, 'verified', 'genuine'],
-    ['BC-039', '2026-07-22 12:45', 'Outpost-Beta', 'Robotics Workshop', 'routine_check', 'Workshop operational. Repairs continuing.', 50, 'verified', 'genuine'],
-  ] as const;
-
-  for (const broadcast of broadcasts) insertBroadcast.run(...broadcast);
-});
-
-seed();
+const SCHEMA_VERSION = 2;
 
 interface SenderRow {
+  sender_id: string;
+  sender_type: SenderType;
+  location: string;
+  first_seen: string | null;
+  last_seen: string | null;
+  total_broadcasts: number;
+  broadcasts_verified_accurate: number;
+  broadcasts_verified_false: number;
+  reliability_score: number;
+  current_status: SenderStatus;
+  is_derived: number;
+}
+
+interface SenderSummaryRow {
   sender_id: string;
   location: string;
   last_seen: string;
@@ -103,7 +51,60 @@ interface BroadcastRow {
   label: GroundTruthLabel;
 }
 
-function riskFor(row: SenderRow): RiskLevel {
+export function createDatabase(databasePath?: string): Database.Database {
+  const resolved = path.resolve(databasePath ?? process.env.DATABASE_PATH ?? './data/silent-outposts.db');
+  fs.mkdirSync(path.dirname(resolved), { recursive: true });
+  const db = new Database(resolved);
+
+  db.pragma('journal_mode = WAL');
+  db.pragma('foreign_keys = ON');
+
+  const version = db.pragma('user_version', { simple: true }) as number;
+  if (version < SCHEMA_VERSION) {
+    db.exec('DROP TABLE IF EXISTS broadcasts; DROP TABLE IF EXISTS senders;');
+  }
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS senders (
+      sender_id TEXT PRIMARY KEY,
+      sender_type TEXT NOT NULL,
+      location TEXT NOT NULL,
+      first_seen TEXT,
+      last_seen TEXT,
+      total_broadcasts INTEGER NOT NULL DEFAULT 0,
+      broadcasts_verified_accurate INTEGER NOT NULL DEFAULT 0,
+      broadcasts_verified_false INTEGER NOT NULL DEFAULT 0,
+      reliability_score INTEGER NOT NULL,
+      current_status TEXT NOT NULL,
+      is_derived INTEGER NOT NULL DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS broadcasts (
+      broadcast_id TEXT PRIMARY KEY,
+      timestamp TEXT NOT NULL,
+      sender_id TEXT NOT NULL,
+      location TEXT NOT NULL,
+      broadcast_type TEXT NOT NULL,
+      message_text TEXT,
+      signal_strength INTEGER,
+      cross_check_status TEXT NOT NULL,
+      label TEXT NOT NULL,
+      FOREIGN KEY (sender_id) REFERENCES senders(sender_id)
+    );
+  `);
+  db.pragma(`user_version = ${SCHEMA_VERSION}`);
+
+  try {
+    importDataset(db);
+  } catch (error) {
+    db.close();
+    throw error;
+  }
+
+  return db;
+}
+
+function riskFor(row: SenderSummaryRow): RiskLevel {
   if (row.current_status === 'gone_quiet' || row.hours_silent >= 72) return 'critical';
   if (row.hours_silent >= 36) return 'high';
   if (row.hours_silent >= 18) return 'medium';
@@ -123,7 +124,54 @@ function mapBroadcast(row: BroadcastRow): Broadcast {
   };
 }
 
-export function getDashboard(): DashboardResponse {
+export function getStations(db: Database.Database): Station[] {
+  const rows = db.prepare(`
+    SELECT
+      sender_id, sender_type, location, first_seen, last_seen, total_broadcasts,
+      broadcasts_verified_accurate, broadcasts_verified_false, reliability_score,
+      current_status, is_derived
+    FROM senders
+    ORDER BY sender_id
+  `).all() as SenderRow[];
+
+  return rows.map((row) => ({
+    senderId: row.sender_id,
+    senderType: row.sender_type,
+    location: row.location,
+    firstSeen: row.first_seen,
+    lastSeen: row.last_seen,
+    totalBroadcasts: row.total_broadcasts,
+    broadcastsVerifiedAccurate: row.broadcasts_verified_accurate,
+    broadcastsVerifiedFalse: row.broadcasts_verified_false,
+    reliabilityScore: row.reliability_score,
+    currentStatus: row.current_status,
+    derived: row.is_derived === 1,
+  }));
+}
+
+export function getStationBroadcasts(
+  db: Database.Database,
+  senderId: string,
+): Broadcast[] | null {
+  const sender = db.prepare('SELECT 1 FROM senders WHERE sender_id = ?').get(senderId);
+  if (!sender) return null;
+
+  const rows = db.prepare(`
+    SELECT * FROM broadcasts
+    WHERE sender_id = ?
+    ORDER BY timestamp ASC
+  `).all(senderId) as BroadcastRow[];
+
+  return rows.map(mapBroadcast);
+}
+
+export function getCounts(db: Database.Database): { stations: number; broadcasts: number } {
+  const stations = db.prepare('SELECT COUNT(*) AS count FROM senders').get() as { count: number };
+  const broadcasts = db.prepare('SELECT COUNT(*) AS count FROM broadcasts').get() as { count: number };
+  return { stations: stations.count, broadcasts: broadcasts.count };
+}
+
+export function getDashboard(db: Database.Database): DashboardResponse {
   const analysisTimestamp = db
     .prepare('SELECT MAX(timestamp) AS timestamp FROM broadcasts')
     .get() as { timestamp: string };
@@ -141,7 +189,7 @@ export function getDashboard(): DashboardResponse {
     WHERE s.sender_type = 'robot_outpost'
     GROUP BY s.sender_id
     ORDER BY hours_silent DESC
-  `).all(analysisTimestamp.timestamp) as SenderRow[];
+  `).all(analysisTimestamp.timestamp) as SenderSummaryRow[];
 
   const outposts: OutpostSummary[] = senderRows.map((row) => ({
     senderId: row.sender_id,
@@ -166,7 +214,7 @@ export function getDashboard(): DashboardResponse {
   };
 }
 
-export function getIncidentEvidence(senderId: string): Broadcast[] {
+export function getIncidentEvidence(db: Database.Database, senderId: string): Broadcast[] {
   const sender = db.prepare('SELECT location FROM senders WHERE sender_id = ?').get(senderId) as
     | { location: string }
     | undefined;
