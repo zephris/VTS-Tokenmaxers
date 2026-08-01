@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orca Pod Report — Matilda Bay</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page-header">
+        <p class="eyebrow">Matilda Bay pod supply</p>
+        <h1>Orca Pod Report</h1>
+        <p class="report-date">
+          All pods on <span id="report-date">4 July 2026</span>
+        </p>
+      </header>
+
+      <section id="status" class="status" aria-live="polite"></section>
+
+      <section class="table-wrap">
+        <table id="pod-table" class="pod-table">
+          <thead>
+            <tr>
+              <th>Pod name</th>
+              <th>Population</th>
+              <th>Distance from hub (km)</th>
+              <th>Peacock disruption</th>
+              <th>Overall status</th>
+            </tr>
+          </thead>
+          <tbody id="pod-tbody"></tbody>
+        </table>
+      </section>
+
+      <footer class="page-footer">
+        Source: <code>matilda_bay_pod_supply.cdv</code> — processed in the browser.
+      </footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

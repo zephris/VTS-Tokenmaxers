@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cors from 'cors';
 import express from 'express';
 import { incidentSummaryRequestSchema } from '@vts/common';
@@ -10,6 +12,9 @@ const port = Number(process.env.PORT ?? 3001);
 
 app.use(cors());
 app.use(express.json());
+
+const orcaPogDir = fileURLToPath(new URL('../orca_pog', import.meta.url));
+app.use('/orca_pog', express.static(orcaPogDir));
 
 app.get('/api/health', (_request, response) => {
   response.json({ ok: true });
