@@ -228,3 +228,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#datasets
+hackathon/Matilda Bay/
+hackathon/Reid Library/
+hackathon/Sunken Garden and CS Building/

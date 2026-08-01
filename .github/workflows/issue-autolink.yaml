@@ -1,4 +1,4 @@
-﻿name: "Issue Autolink"
+﻿name: 'Issue Autolink'
 on:
   issues:
     types: [opened]
