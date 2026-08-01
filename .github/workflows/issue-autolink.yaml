@@ -1,7 +1,7 @@
-name: "Issue Autolink"
+﻿name: "Issue Autolink"
 on:
   issues:
-    types: [assigned]
+    types: [opened]
 
 permissions:
   contents: write
@@ -56,12 +56,12 @@ jobs:
           if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null 2>&1; then
             echo "Branch $BRANCH_NAME already exists"
             echo "Branch already exists for issue $ISSUE_NUMBER"
-            MESSAGE="Branch already exists for issue #$ISSUE_NUMBER: \\`$BRANCH_NAME\\`"
+            MESSAGE="Branch already exists for issue #$ISSUE_NUMBER: \`$BRANCH_NAME\` - https://github.com/${GITHUB_REPOSITORY}/tree/$BRANCH_NAME"
           else
             git checkout -b "$BRANCH_NAME"
             git push --set-upstream origin "$BRANCH_NAME"
             echo "Branch created successfully for issue $ISSUE_NUMBER: $BRANCH_NAME"
-            MESSAGE="Branch created for issue #$ISSUE_NUMBER: \\`$BRANCH_NAME\\`"
+            MESSAGE="Branch created for issue #$ISSUE_NUMBER: \`$BRANCH_NAME\` - https://github.com/${GITHUB_REPOSITORY}/tree/$BRANCH_NAME"
           fi
 
           curl -s -X POST \
