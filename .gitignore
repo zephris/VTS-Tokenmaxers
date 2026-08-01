@@ -189,6 +189,7 @@ node_modules/
 *.tsbuildinfo
 apps/web/dist/
 apps/server/dist/
+apps/server/bin/
 packages/common/dist/
 apps/server/data/*.db
 apps/server/data/*.db-*
