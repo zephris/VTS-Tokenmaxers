@@ -1,0 +1,301 @@
+broadcast_id,timestamp,sender_id,location,broadcast_type,message_text,signal_strength,cross_check_status,label
+BC-001,2026-07-10 06:15,Outpost-Alpha,Sunken Garden,routine_check,"Morning check-in. All systems nominal near Sunken Garden.",62,verified,genuine
+BC-002,2026-07-10 09:40,Marv Mail,CS Building Foyer,situation_report,"Confirmed safe passage through CS Building Foyer. No peacock activity detected.",71,verified,genuine
+BC-003,2026-07-10 14:05,Outpost-Delta,Guild Village,routine_check,"Guild Village quiet. Supplies stable.",55,verified,genuine
+BC-004,2026-07-11 07:20,Mini-Marv-01,Reynolds Court,situation_report,"Cross-checked Outpost-Beta's report with eyewitness scouts. Matches.",58,verified,genuine
+BC-005,2026-07-11 11:50,New Meridian,Hackett Hall Path,all_clear,"All clear on Hackett Hall Path. Convoys may proceed without escort.",91,disputed,peacock_spoofed
+BC-006,2026-07-11 12:10,Outpost-Beta,Robotics Workshop,supply_request,"Requesting spare parts at Robotics Workshop. Low on components.",49,unconfirmed,genuine
+BC-007,2026-07-12 08:00,Outpost-Alpha,Sunken Garden,warning,"Convoy ambushed near Hackett Hall Path despite yesterday's all-clear signal. Feathers detected nearby.",60,verified,genuine
+BC-008,2026-07-12 09:15,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer remains stable, minor debris cleared.",68,verified,genuine
+BC-009,2026-07-12 15:30,Mini-Marv-02,Hackett Hall Path,situation_report,"Investigated Hackett Hall Path incident. New Meridian's report does not match ground observations.",54,disputed,genuine
+BC-010,2026-07-13 06:45,Outpost-Delta,Guild Village,routine_check,"Guild Village status unchanged. Low peacock sightings.",51,verified,genuine
+BC-011,2026-07-13 10:20,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building sector secure, patrol completed without incident.",65,verified,outdated
+BC-012,2026-07-13 13:00,New Meridian,IT Building Relay Tower,all_clear,"IT Building Relay Tower area clear for supply movement.",89,disputed,peacock_spoofed
+BC-013,2026-07-14 07:00,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden stable. Vigilance advised near tree line.",59,verified,genuine
+BC-014,2026-07-14 09:30,Mini-Marv-03,Physics Lawn,situation_report,"Cross-checked Marv Mail's Old Commerce report. Patrol log timestamp mismatch found - report was two days old.",56,disputed,genuine
+BC-015,2026-07-15 08:10,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer secure. Confident in current supply routes.",70,verified,outdated
+BC-016,2026-07-15 12:45,New Meridian,Reynolds Court,all_clear,"Reynolds Court fully clear. Large convoy welcome to pass through.",93,disputed,peacock_spoofed
+BC-017,2026-07-15 16:00,Outpost-Beta,Robotics Workshop,warning,"Small peacocks spotted circling Robotics Workshop perimeter.",47,verified,genuine
+BC-018,2026-07-16 07:35,Outpost-Alpha,Reynolds Court,warning,"Convoy lost near Reynolds Court. New Meridian's all-clear was false.",61,verified,genuine
+BC-019,2026-07-16 10:05,Mini-Marv-01,Guild Village,emergency,"Attempting contact with Outpost-Delta. No response for 48 hours.",,unconfirmed,genuine
+BC-020,2026-07-16 14:20,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building remains as previously reported.",66,verified,outdated
+BC-021,2026-07-17 05:50,Outpost-Gamma,Prescott Court,emergency,"Urgent: peacock swarm breaching Prescott Court perimeter. Need immediate reinforcement.",44,not_checked,genuine
+BC-022,2026-07-17 06:10,Outpost-Gamma,Prescott Court,emergency,"Repeat: Prescott Court under direct attack. This is not a drill.",41,not_checked,genuine
+BC-023,2026-07-17 09:00,New Meridian,Prescott Court,all_clear,"Prescott Court situation resolved. All clear now.",90,disputed,peacock_spoofed
+BC-024,2026-07-18 08:25,Mini-Marv-02,Prescott Court,situation_report,"Arrived Prescott Court late. Damage found consistent with Outpost-Gamma's emergency calls, not New Meridian's all-clear.",52,verified,genuine
+BC-025,2026-07-18 11:40,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden holding steady despite regional disruptions.",60,verified,genuine
+BC-026,2026-07-18 15:55,Marv Mail,CS Building Foyer,situation_report,,72,verified,unknown
+BC-027,2026-07-19 07:15,Outpost-Beta,Robotics Workshop,routine_check,"Robotics Workshop quiet this morning. Minor repairs ongoing.",48,verified,genuine
+BC-028,2026-07-19 12:30,New Meridian,IT Building Relay Tower,all_clear,"IT Building Relay Tower clear. Proceed as normal.",92,disputed,peacock_spoofed
+BC-029,2026-07-19 18:45,Outpost-Alpha,Sunken Garden,routine_check,"Evening check near Sunken Garden. No new activity.",58,verified,genuine
+BC-030,2026-07-20 07:05,New Meridian,Library Walk,all_clear,"Library Walk fully secured. Convoys may pass freely.",88,disputed,peacock_spoofed
+BC-031,2026-07-20 09:50,Outpost-Beta,Robotics Workshop,supply_request,"Requesting replacement casing at Robotics Workshop.",50,unconfirmed,genuine
+BC-032,2026-07-21 10:15,Outpost-Alpha,Library Walk,warning,"Convoy ambushed on Library Walk. Yesterday's all-clear from New Meridian was false.",63,verified,genuine
+BC-033,2026-07-21 13:40,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer secure, patrol notes unchanged from last cycle.",69,verified,outdated
+BC-034,2026-07-22 08:20,Mini-Marv-03,CS Building Foyer,situation_report,"Cross-checked Marv Mail's latest CS Building Foyer report against current scout logs. Timestamp mismatch of over a day found.",57,disputed,genuine
+BC-035,2026-07-22 11:05,New Meridian,Guild Village,all_clear,"Guild Village confirmed clear. Outpost-Delta concerns overstated.",87,disputed,peacock_spoofed
+BC-036,2026-07-22 12:00,Mini-Marv-01,Guild Village,emergency,"Still no contact with Outpost-Delta after repeated attempts. New Meridian's all-clear contradicts the silence and cannot be confirmed.",,not_checked,genuine
+BC-037,2026-07-23 06:30,Outpost-Epsilon,Physics Lawn,emergency,"Peacock flock breaching Physics Lawn treeline. Requesting backup now.",45,not_checked,genuine
+BC-038,2026-07-23 09:10,Marv Mail,Old Commerce Building,situation_report,,64,verified,unknown
+BC-039,2026-07-24 07:45,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden calm this morning, minor debris cleared from path.",61,verified,genuine
+BC-040,2026-07-24 13:20,New Meridian,Robotics Workshop,all_clear,"Robotics Workshop area fully clear for supply runs.",94,disputed,peacock_spoofed
+BC-041,2026-07-25 15:00,Outpost-Beta,Robotics Workshop,warning,"Robotics Workshop hit by peacock swarm overnight. New Meridian's all-clear yesterday was false.",46,verified,genuine
+BC-042,2026-07-25 17:30,Mini-Marv-02,Physics Lawn,situation_report,"Followed up on Outpost-Epsilon's emergency call from two days ago - no relief ever arrived, damage confirms the original report.",53,verified,genuine
+BC-043,2026-07-26 07:00,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden quiet, gardeners spotted no peacocks this morning.",60,verified,genuine
+BC-044,2026-07-26 12:00,Outpost-Beta,Robotics Workshop,supply_request,"Requesting bolts and casing screws, stock running low at Robotics Workshop.",51,unconfirmed,genuine
+BC-045,2026-07-26 15:00,Outpost-Epsilon,Physics Lawn,routine_check,Physics Lawn calm since yesterday's incident. Repairs underway.,46,verified,genuine
+BC-046,2026-07-26 19:00,New Meridian,Engineering Quad,all_clear,Engineering Quad fully secured. Convoys cleared to pass without escort.,90,disputed,peacock_spoofed
+BC-047,2026-07-28 01:00,Outpost-Alpha,Engineering Quad,warning,Convoy attacked at Engineering Quad. New Meridian's all-clear yesterday was false.,59,verified,genuine
+BC-048,2026-07-28 07:00,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building patrol notes unchanged, route still considered safe.",67,verified,outdated
+BC-049,2026-07-28 17:00,Mini-Marv-03,Old Commerce Building,situation_report,Cross-checked Marv Mail's Old Commerce Building report. Scout logs show a collapse in that sector two days prior.,55,disputed,genuine
+BC-050,2026-07-29 01:00,Outpost-Beta,Robotics Workshop,routine_check,Robotics Workshop steady. New parts installed.,49,verified,genuine
+BC-051,2026-07-29 10:00,Outpost-Epsilon,North Parking Structure,emergency,Peacocks breaching North Parking Structure perimeter fence. Requesting immediate backup.,43,not_checked,genuine
+BC-052,2026-07-29 10:18,Outpost-Epsilon,North Parking Structure,emergency,"Repeat: North Parking Structure overrun, retreating to secondary position.",40,not_checked,genuine
+BC-053,2026-07-29 12:48,New Meridian,North Parking Structure,all_clear,"North Parking Structure situation resolved. All clear, proceed as normal.",91,disputed,peacock_spoofed
+BC-054,2026-07-30 10:48,Mini-Marv-02,North Parking Structure,situation_report,"Arrived North Parking Structure late. Damage matches Outpost-Epsilon's emergency calls, not New Meridian's all-clear.",53,verified,genuine
+BC-055,2026-07-30 16:48,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden holding, minor foliage overgrowth noted.",58,verified,genuine
+BC-056,2026-07-31 01:48,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer reported secure, based on last known patrol route.",68,verified,outdated
+BC-057,2026-07-31 06:48,New Meridian,Bookstore Plaza,all_clear,Bookstore Plaza clear for all convoy traffic.,93,disputed,peacock_spoofed
+BC-058,2026-08-01 10:48,Outpost-Beta,Bookstore Plaza,warning,Bookstore Plaza convoy ambushed. Yesterday's New Meridian all-clear proven false.,47,verified,genuine
+BC-059,2026-08-01 14:48,Mini-Marv-01,Bookstore Plaza,situation_report,Cross-checked Bookstore Plaza incident against New Meridian's prior broadcast. Signal profile matches known spoofing pattern.,56,disputed,genuine
+BC-060,2026-08-01 21:48,Outpost-Epsilon,Physics Lawn,supply_request,Requesting medical supplies for minor injuries sustained at Physics Lawn.,44,unconfirmed,genuine
+BC-061,2026-08-02 03:48,Outpost-Beta,Robotics Workshop,routine_check,"Robotics Workshop quiet overnight, no peacock sightings.",50,verified,genuine
+BC-062,2026-08-02 13:48,Mini-Marv-01,Rec Center Courtyard,emergency,"Investigating reports of disturbance at Rec Center Courtyard, signal degraded en route.",,unconfirmed,genuine
+BC-063,2026-08-02 18:48,Marv Mail,Old Commerce Building,situation_report,,63,verified,unknown
+BC-064,2026-08-03 03:48,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer remains as last documented, no changes to report.",66,verified,outdated
+BC-065,2026-08-03 14:48,Mini-Marv-03,CS Building Foyer,situation_report,Marv Mail's CS Building Foyer report contradicted by fresh scout sighting of peacock activity.,54,disputed,genuine
+BC-066,2026-08-03 20:48,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden stable, evening patrol complete.",57,verified,genuine
+BC-067,2026-08-04 04:48,Outpost-Epsilon,Physics Lawn,routine_check,"Physics Lawn steady, fence repairs finished.",47,verified,genuine
+BC-068,2026-08-04 09:48,New Meridian,Founders Walk,all_clear,"Founders Walk fully clear, convoys may resume normal routes.",89,disputed,peacock_spoofed
+BC-069,2026-08-05 16:48,Outpost-Alpha,Founders Walk,warning,Founders Walk convoy lost overnight. New Meridian's all-clear was false.,60,verified,genuine
+BC-070,2026-08-05 22:48,Outpost-Beta,Robotics Workshop,supply_request,"Requesting replacement antenna, current one damaged by peacock strike.",48,unconfirmed,genuine
+BC-071,2026-08-06 07:48,Marv Mail,Old Commerce Building,situation_report,Old Commerce Building sector reported secure based on prior notes.,65,verified,outdated
+BC-072,2026-08-06 14:48,Outpost-Gamma,Rec Center Courtyard,emergency,"Peacock swarm breaching Rec Center Courtyard, requesting reinforcements immediately.",42,not_checked,genuine
+BC-073,2026-08-06 15:12,Outpost-Gamma,Rec Center Courtyard,emergency,"Repeat: Rec Center Courtyard perimeter breached, falling back.",39,not_checked,genuine
+BC-074,2026-08-06 17:54,New Meridian,Rec Center Courtyard,all_clear,"Rec Center Courtyard situation resolved, all clear now.",92,disputed,peacock_spoofed
+BC-075,2026-08-07 16:54,Mini-Marv-02,Rec Center Courtyard,situation_report,"Arrived Rec Center Courtyard, damage confirms Outpost-Gamma's emergency calls rather than New Meridian's all-clear.",52,verified,genuine
+BC-076,2026-08-07 22:54,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden calm, no new peacock signs.",59,verified,genuine
+BC-077,2026-08-08 05:54,Outpost-Epsilon,Physics Lawn,routine_check,"Physics Lawn quiet, supply cache restocked.",45,verified,genuine
+BC-078,2026-08-08 13:54,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer secure per last patrol, no updates since.",70,verified,outdated
+BC-079,2026-08-08 23:54,Mini-Marv-01,CS Building Foyer,situation_report,Marv Mail's CS Building Foyer report flagged - timestamp shows patrol log is several days stale.,58,disputed,genuine
+BC-080,2026-08-09 05:54,New Meridian,Guild Village,all_clear,"Guild Village remains clear, no further concern warranted.",86,disputed,peacock_spoofed
+BC-081,2026-08-10 08:54,Mini-Marv-01,Guild Village,warning,Guild Village convoy scout found signs of struggle. New Meridian's repeated all-clears here do not match ground conditions.,55,verified,genuine
+BC-082,2026-08-10 14:54,Outpost-Beta,Robotics Workshop,routine_check,"Robotics Workshop quiet, minor cleanup ongoing.",52,verified,genuine
+BC-083,2026-08-10 22:54,Outpost-Alpha,Sunken Garden,routine_check,Sunken Garden unremarkable overnight.,61,verified,genuine
+BC-084,2026-08-11 03:54,New Meridian,Hackett Hall Path,all_clear,"Hackett Hall Path clear again, convoys resume normal schedule.",88,disputed,peacock_spoofed
+BC-085,2026-08-12 08:54,Outpost-Beta,Hackett Hall Path,warning,Hackett Hall Path convoy hit again. Same false all-clear pattern as before from New Meridian.,48,verified,genuine
+BC-086,2026-08-12 14:54,Outpost-Epsilon,Physics Lawn,supply_request,Requesting fuel cells for patrol drones at Physics Lawn.,43,unconfirmed,genuine
+BC-087,2026-08-12 22:54,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building unchanged, relying on earlier patrol notes.",64,verified,outdated
+BC-088,2026-08-13 08:54,Mini-Marv-03,Old Commerce Building,situation_report,Marv Mail's Old Commerce Building report disputed - conditions on the ground shifted after recent rains washed out the noted route.,56,disputed,genuine
+BC-089,2026-08-13 14:54,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden steady, light patrol only.",60,verified,genuine
+BC-090,2026-08-13 21:54,Outpost-Beta,Robotics Workshop,routine_check,"Robotics Workshop nominal, supply crates arrived.",51,verified,genuine
+BC-091,2026-08-14 02:54,New Meridian,Reynolds Court,all_clear,Reynolds Court declared safe once more for convoy travel.,95,disputed,peacock_spoofed
+BC-092,2026-08-15 04:54,Outpost-Alpha,Reynolds Court,warning,"Reynolds Court convoy struck again, matching the pattern of New Meridian's repeated false all-clears.",62,verified,genuine
+BC-093,2026-08-15 08:54,Mini-Marv-04,Reynolds Court,situation_report,"New to the relay network - confirmed Reynolds Court incident matches Outpost-Alpha's warning, not New Meridian's all-clear.",57,disputed,genuine
+BC-094,2026-08-15 14:54,Outpost-Epsilon,Physics Lawn,routine_check,"Physics Lawn quiet, no incidents to report.",46,verified,genuine
+BC-095,2026-08-15 22:54,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer status carried over from previous cycle, unchanged.",71,verified,outdated
+BC-096,2026-08-16 07:54,Outpost-Alpha,Sunken Garden,routine_check,"Sunken Garden final check of the cycle, all quiet.",59,verified,genuine
+BC-097,2026-08-16 14:54,Outpost-Beta,Robotics Workshop,routine_check,"Robotics Workshop closing report, no anomalies detected.",50,verified,genuine
+BC-098,2026-08-16 20:54,Outpost-Epsilon,Physics Lawn,supply_request,Requesting spare tarps for storm coverage at Physics Lawn.,44,unconfirmed,genuine
+BC-099,2026-08-17 04:54,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building status unchanged from prior cycle, patrol overdue for renewal.",62,verified,outdated
+BC-100,2026-08-17 14:54,Mini-Marv-02,Old Commerce Building,situation_report,Marv Mail's Old Commerce Building report disputed after fresh scouting revealed a new debris field blocking the route.,55,disputed,genuine
+BC-101,2026-08-18 04:39,Outpost-Beta,Old Commerce Building,routine_check,Routine check at Old Commerce Building complete. All systems nominal.,66,verified,genuine
+BC-102,2026-08-18 08:54,New Meridian,Guild Village,all_clear,"Guild Village clear for all convoy traffic, no further concern warranted.",88,disputed,peacock_spoofed
+BC-103,2026-08-19 21:02,Outpost-Alpha,Guild Village,warning,Convoy lost at Guild Village. Same false all-clear pattern as before from New Meridian.,65,verified,genuine
+BC-104,2026-08-20 04:23,Marv Mail,Founders Walk,situation_report,"Founders Walk unchanged, relying on earlier patrol notes.",64,verified,outdated
+BC-105,2026-08-20 14:50,Outpost-Zeta,Maintenance Tunnel Entrance,routine_check,Nothing unusual to report at Maintenance Tunnel Entrance this pass.,53,verified,genuine
+BC-106,2026-08-21 00:57,Outpost-Alpha,Reynolds Court,routine_check,"Reynolds Court status unchanged, low peacock sightings.",48,verified,genuine
+BC-107,2026-08-21 09:46,Mini-Marv-05,CS Building Foyer,situation_report,Cross-checked Outpost-Zeta's report at CS Building Foyer with eyewitness scouts. Matches ground conditions.,56,verified,genuine
+BC-108,2026-08-21 16:07,Outpost-Theta,Greenhouse Row,routine_check,Nothing unusual to report at Greenhouse Row this pass.,63,verified,genuine
+BC-109,2026-08-21 20:29,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building status unchanged from prior cycle, patrol overdue for renewal.",61,verified,outdated
+BC-110,2026-08-22 03:32,Outpost-Zeta,Founders Walk,emergency,Urgent: peacock swarm breaching Founders Walk perimeter. Need immediate reinforcement.,43,not_checked,genuine
+BC-111,2026-08-22 03:52,Outpost-Zeta,Founders Walk,emergency,"Repeat: Founders Walk perimeter breached, falling back.",40,not_checked,genuine
+BC-112,2026-08-22 07:16,New Meridian,Founders Walk,all_clear,Founders Walk fully secured. Convoys may proceed without escort.,89,disputed,peacock_spoofed
+BC-113,2026-08-23 06:29,Mini-Marv-02,Founders Walk,situation_report,"Arrived Founders Walk late. Damage found consistent with the original emergency calls, not New Meridian's all-clear.",53,verified,genuine
+BC-114,2026-08-23 18:24,Outpost-Theta,Greenhouse Row,supply_request,Need replacement fuel cells delivered to Greenhouse Row.,50,unconfirmed,genuine
+BC-115,2026-08-24 04:36,Mini-Marv-03,Old Commerce Building,situation_report,"Verified Old Commerce Building conditions independently, consistent with Outpost-Alpha's broadcast.",54,verified,genuine
+BC-116,2026-08-24 15:54,Outpost-Epsilon,Transit Hub Plaza,routine_check,"Patrol through Transit Hub Plaza uneventful, supplies holding.",65,unconfirmed,genuine
+BC-117,2026-08-25 03:13,Outpost-Beta,Founders Walk,supply_request,Supply cache at Founders Walk needs restocking within the week.,44,unconfirmed,genuine
+BC-118,2026-08-25 11:43,Outpost-Theta,Physics Lawn,routine_check,"Physics Lawn status unchanged, low peacock sightings.",63,unconfirmed,genuine
+BC-119,2026-08-25 23:42,Outpost-Theta,Hackett Hall Path,supply_request,Requesting medical kit resupply near Hackett Hall Path.,42,unconfirmed,genuine
+BC-120,2026-08-26 10:35,Marv Mail,Hackett Hall Path,situation_report,"Hackett Hall Path remains as previously reported, no changes to note.",72,verified,outdated
+BC-121,2026-08-26 17:40,New Meridian,West Amphitheater,all_clear,West Amphitheater situation resolved. All clear now.,93,disputed,peacock_spoofed
+BC-122,2026-08-27 23:42,Outpost-Theta,West Amphitheater,warning,Convoy ambushed near West Amphitheater despite yesterday's all-clear signal. New Meridian's report was false.,48,verified,genuine
+BC-123,2026-08-28 07:59,Marv Mail,Physics Lawn,situation_report,"Physics Lawn status unchanged from prior cycle, patrol overdue for renewal.",61,verified,outdated
+BC-124,2026-08-28 15:15,Mini-Marv-01,Physics Lawn,situation_report,Investigated Marv Mail's Physics Lawn claim - patrol log shows it predates a recent incident in that sector.,60,disputed,genuine
+BC-125,2026-08-28 23:19,Mini-Marv-05,Reynolds Court,situation_report,Confirmed Outpost-Epsilon's Reynolds Court report through direct patrol observation.,53,verified,genuine
+BC-126,2026-08-29 09:25,Outpost-Theta,Faculty Club Lawn,routine_check,"Faculty Club Lawn quiet this cycle, no peacock activity reported.",64,verified,genuine
+BC-127,2026-08-29 14:19,New Meridian,Engineering Quad,all_clear,All clear at Engineering Quad. Proceed as normal.,88,disputed,peacock_spoofed
+BC-128,2026-08-30 15:42,Outpost-Theta,Engineering Quad,warning,Convoy ambushed near Engineering Quad despite yesterday's all-clear signal. New Meridian's report was false.,47,verified,genuine
+BC-129,2026-08-31 02:14,Marv Mail,Hackett Hall Path,situation_report,"Hackett Hall Path remains as previously reported, no changes to note.",70,verified,outdated
+BC-130,2026-08-31 12:38,Mini-Marv-03,Hackett Hall Path,situation_report,Marv Mail's Hackett Hall Path report flagged; conditions there have shifted since it was filed.,55,disputed,genuine
+BC-131,2026-08-31 22:40,Outpost-Epsilon,Maintenance Tunnel Entrance,emergency,Peacock flock breaching Maintenance Tunnel Entrance treeline. Requesting backup now.,42,not_checked,genuine
+BC-132,2026-08-31 23:02,Outpost-Epsilon,Maintenance Tunnel Entrance,emergency,"Repeat: Maintenance Tunnel Entrance perimeter breached, falling back.",41,not_checked,genuine
+BC-133,2026-09-01 01:54,New Meridian,Maintenance Tunnel Entrance,all_clear,Maintenance Tunnel Entrance declared safe once more for convoy travel.,94,disputed,peacock_spoofed
+BC-134,2026-09-01 22:38,Mini-Marv-02,Maintenance Tunnel Entrance,situation_report,"Arrived Maintenance Tunnel Entrance late. Damage found consistent with the original emergency calls, not New Meridian's all-clear.",52,verified,genuine
+BC-135,2026-09-02 07:04,Outpost-Beta,Transit Hub Plaza,routine_check,"Transit Hub Plaza quiet this cycle, no peacock activity reported.",47,verified,genuine
+BC-136,2026-09-02 18:18,Outpost-Alpha,Prescott Court,routine_check,"Patrol through Prescott Court uneventful, supplies holding.",53,unconfirmed,genuine
+BC-137,2026-09-02 23:22,Outpost-Theta,Transit Hub Plaza,routine_check,Morning sweep of Transit Hub Plaza shows no new activity.,52,unconfirmed,genuine
+BC-138,2026-09-03 04:53,Mini-Marv-03,Reynolds Court,situation_report,"Verified Reynolds Court conditions independently, consistent with Outpost-Zeta's broadcast.",56,verified,genuine
+BC-139,2026-09-03 14:43,New Meridian,Solar Array Field,all_clear,Solar Array Field fully secured. Convoys may proceed without escort.,85,disputed,peacock_spoofed
+BC-140,2026-09-05 00:23,Outpost-Epsilon,Solar Array Field,warning,Convoy ambushed near Solar Array Field despite yesterday's all-clear signal. New Meridian's report was false.,52,verified,genuine
+BC-141,2026-09-05 08:40,Outpost-Zeta,Hackett Hall Path,routine_check,"Hackett Hall Path steady, minor debris cleared from main path.",53,unconfirmed,genuine
+BC-142,2026-09-05 20:04,Outpost-Theta,Founders Walk,routine_check,Routine check at Founders Walk complete. All systems nominal.,46,verified,genuine
+BC-143,2026-09-06 07:28,Outpost-Zeta,Robotics Workshop,emergency,"Investigating disturbance reports near Robotics Workshop, signal degraded en route.",,unconfirmed,genuine
+BC-144,2026-09-06 13:11,New Meridian,Bookstore Plaza,all_clear,Bookstore Plaza fully secured. Convoys may proceed without escort.,87,disputed,peacock_spoofed
+BC-145,2026-09-07 22:17,Outpost-Zeta,Bookstore Plaza,warning,"Bookstore Plaza hit by peacock swarm overnight, contradicting New Meridian's recent all-clear.",59,verified,genuine
+BC-146,2026-09-08 07:51,Outpost-Theta,Admin Building Steps,routine_check,Morning sweep of Admin Building Steps shows no new activity.,49,verified,genuine
+BC-147,2026-09-08 19:36,Outpost-Theta,Transit Hub Plaza,routine_check,"Transit Hub Plaza quiet this cycle, no peacock activity reported.",68,verified,genuine
+BC-148,2026-09-09 04:16,Outpost-Theta,Chemistry Annex,routine_check,"Chemistry Annex steady, minor debris cleared from main path.",46,verified,genuine
+BC-149,2026-09-09 08:49,Mini-Marv-04,Guild Village,situation_report,Cross-checked Outpost-Beta's report at Guild Village with eyewitness scouts. Matches ground conditions.,59,verified,genuine
+BC-150,2026-09-09 17:35,Outpost-Alpha,West Amphitheater,routine_check,"West Amphitheater status unchanged, low peacock sightings.",66,verified,genuine
+BC-151,2026-09-09 23:13,Outpost-Zeta,Maintenance Tunnel Entrance,emergency,Urgent: peacock swarm breaching Maintenance Tunnel Entrance perimeter. Need immediate reinforcement.,42,not_checked,genuine
+BC-152,2026-09-09 23:34,Outpost-Zeta,Maintenance Tunnel Entrance,emergency,"Repeat: Maintenance Tunnel Entrance perimeter breached, falling back.",40,not_checked,genuine
+BC-153,2026-09-10 02:29,New Meridian,Maintenance Tunnel Entrance,all_clear,Maintenance Tunnel Entrance fully secured. Convoys may proceed without escort.,87,disputed,peacock_spoofed
+BC-154,2026-09-11 01:14,Mini-Marv-05,Maintenance Tunnel Entrance,situation_report,"Arrived Maintenance Tunnel Entrance late. Damage found consistent with the original emergency calls, not New Meridian's all-clear.",50,verified,genuine
+BC-155,2026-09-11 09:17,New Meridian,Hackett Hall Path,all_clear,All clear at Hackett Hall Path. Proceed as normal.,86,disputed,peacock_spoofed
+BC-156,2026-09-13 06:23,Outpost-Epsilon,Hackett Hall Path,warning,"Hackett Hall Path hit by peacock swarm overnight, contradicting New Meridian's recent all-clear.",50,verified,genuine
+BC-157,2026-09-13 14:44,Outpost-Theta,Library Walk,supply_request,"Low on antenna components at Library Walk, requesting shipment.",40,unconfirmed,genuine
+BC-158,2026-09-13 23:10,Marv Mail,Reynolds Court,situation_report,"Reynolds Court remains as previously reported, no changes to note.",64,verified,outdated
+BC-159,2026-09-14 06:01,Mini-Marv-05,Reynolds Court,situation_report,Marv Mail's Reynolds Court report disputed after fresh scouting revealed changed conditions on the ground.,56,disputed,genuine
+BC-160,2026-09-14 11:42,Outpost-Beta,Prescott Court,routine_check,"Prescott Court calm overnight, fence line intact.",61,unconfirmed,genuine
+BC-161,2026-09-14 22:58,Outpost-Alpha,CS Building Foyer,routine_check,"CS Building Foyer status unchanged, low peacock sightings.",53,verified,genuine
+BC-162,2026-09-15 09:08,Outpost-Epsilon,Greenhouse Row,routine_check,"Greenhouse Row steady, minor debris cleared from main path.",68,unconfirmed,genuine
+BC-163,2026-09-15 16:34,New Meridian,Sunken Garden,all_clear,Sunken Garden fully secured. Convoys may proceed without escort.,86,disputed,peacock_spoofed
+BC-164,2026-09-17 15:15,Outpost-Beta,Sunken Garden,warning,Convoy ambushed near Sunken Garden despite yesterday's all-clear signal. New Meridian's report was false.,56,verified,genuine
+BC-165,2026-09-17 20:26,New Meridian,Hackett Hall Path,all_clear,Hackett Hall Path fully secured. Convoys may proceed without escort.,89,disputed,peacock_spoofed
+BC-166,2026-09-19 05:11,Outpost-Alpha,Hackett Hall Path,warning,"Hackett Hall Path hit by peacock swarm overnight, contradicting New Meridian's recent all-clear.",51,verified,genuine
+BC-167,2026-09-19 14:31,Marv Mail,Engineering Quad,situation_report,"Engineering Quad unchanged, relying on earlier patrol notes.",66,verified,outdated
+BC-168,2026-09-20 01:55,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building remains as previously reported, no changes to note.",72,verified,outdated
+BC-169,2026-09-20 06:07,Outpost-Zeta,Admin Building Steps,emergency,Peacocks breaching Admin Building Steps perimeter fence. Requesting immediate backup.,41,not_checked,genuine
+BC-170,2026-09-20 06:26,Outpost-Zeta,Admin Building Steps,emergency,"Repeat: Admin Building Steps perimeter breached, falling back.",37,not_checked,genuine
+BC-171,2026-09-20 09:11,New Meridian,Admin Building Steps,all_clear,Admin Building Steps fully secured. Convoys may proceed without escort.,94,disputed,peacock_spoofed
+BC-172,2026-09-21 06:32,Mini-Marv-04,Admin Building Steps,situation_report,"Investigated Admin Building Steps - damage matches the earlier emergency broadcasts, not New Meridian's all-clear.",52,verified,genuine
+BC-173,2026-09-21 17:30,Mini-Marv-02,Old Commerce Building,situation_report,"Verified Old Commerce Building conditions independently, consistent with Outpost-Alpha's broadcast.",55,verified,genuine
+BC-174,2026-09-21 22:03,Outpost-Epsilon,Physics Lawn,routine_check,"Physics Lawn status unchanged, low peacock sightings.",66,verified,genuine
+BC-175,2026-09-22 02:58,Outpost-Epsilon,Physics Lawn,emergency,Peacock flock breaching Physics Lawn treeline. Requesting backup now.,42,not_checked,genuine
+BC-176,2026-09-22 03:11,Outpost-Epsilon,Physics Lawn,emergency,"Repeat: Physics Lawn perimeter breached, falling back.",42,not_checked,genuine
+BC-177,2026-09-22 05:53,New Meridian,Physics Lawn,all_clear,All clear at Physics Lawn. Proceed as normal.,93,disputed,peacock_spoofed
+BC-178,2026-09-23 05:31,Mini-Marv-05,Physics Lawn,situation_report,"Arrived Physics Lawn late. Damage found consistent with the original emergency calls, not New Meridian's all-clear.",53,verified,genuine
+BC-179,2026-09-23 11:02,Outpost-Theta,CS Building Foyer,emergency,Urgent: peacock swarm breaching CS Building Foyer perimeter. Need immediate reinforcement.,46,not_checked,genuine
+BC-180,2026-09-23 11:37,Outpost-Theta,CS Building Foyer,emergency,"Repeat: CS Building Foyer perimeter breached, falling back.",39,not_checked,genuine
+BC-181,2026-09-23 14:20,New Meridian,CS Building Foyer,all_clear,CS Building Foyer fully secured. Convoys may proceed without escort.,92,disputed,peacock_spoofed
+BC-182,2026-09-24 14:05,Mini-Marv-01,CS Building Foyer,situation_report,"Followed up on CS Building Foyer's emergency call - no relief ever arrived, damage confirms the original reports.",52,verified,genuine
+BC-183,2026-09-24 23:25,New Meridian,Prescott Court,all_clear,Prescott Court situation resolved. All clear now.,89,disputed,peacock_spoofed
+BC-184,2026-09-26 12:43,Outpost-Beta,Prescott Court,warning,Attack reported at Prescott Court - New Meridian's all-clear from yesterday proven false again.,57,verified,genuine
+BC-185,2026-09-26 23:56,Marv Mail,Library Walk,situation_report,Library Walk reported secure based on last known patrol route.,68,verified,outdated
+BC-186,2026-09-27 05:37,Outpost-Theta,Transit Hub Plaza,supply_request,Supply cache at Transit Hub Plaza needs restocking within the week.,54,unconfirmed,genuine
+BC-187,2026-09-27 15:02,New Meridian,Chemistry Annex,all_clear,Chemistry Annex situation resolved. All clear now.,87,disputed,peacock_spoofed
+BC-188,2026-09-29 06:50,Outpost-Epsilon,Chemistry Annex,warning,"Chemistry Annex hit by peacock swarm overnight, contradicting New Meridian's recent all-clear.",47,verified,genuine
+BC-189,2026-09-29 16:51,Mini-Marv-02,Solar Array Field,situation_report,Cross-checked Outpost-Epsilon's report at Solar Array Field with eyewitness scouts. Matches ground conditions.,52,verified,genuine
+BC-190,2026-09-29 22:48,Outpost-Theta,North Parking Structure,routine_check,Routine check at North Parking Structure complete. All systems nominal.,59,unconfirmed,genuine
+BC-191,2026-09-30 07:25,Outpost-Theta,Maintenance Tunnel Entrance,emergency,Peacocks breaching Maintenance Tunnel Entrance perimeter fence. Requesting immediate backup.,44,not_checked,genuine
+BC-192,2026-09-30 07:43,Outpost-Theta,Maintenance Tunnel Entrance,emergency,"Repeat: Maintenance Tunnel Entrance perimeter breached, falling back.",36,not_checked,genuine
+BC-193,2026-09-30 11:30,New Meridian,Maintenance Tunnel Entrance,all_clear,Maintenance Tunnel Entrance fully secured. Convoys may proceed without escort.,93,disputed,peacock_spoofed
+BC-194,2026-10-01 08:48,Mini-Marv-05,Maintenance Tunnel Entrance,situation_report,"Investigated Maintenance Tunnel Entrance - damage matches the earlier emergency broadcasts, not New Meridian's all-clear.",50,verified,genuine
+BC-195,2026-10-01 20:09,New Meridian,Reynolds Court,all_clear,Reynolds Court situation resolved. All clear now.,87,disputed,peacock_spoofed
+BC-196,2026-10-03 15:23,Outpost-Theta,Reynolds Court,warning,"Reynolds Court hit by peacock swarm overnight, contradicting New Meridian's recent all-clear.",59,verified,genuine
+BC-197,2026-10-04 01:08,Marv Mail,Rec Center Courtyard,situation_report,"Rec Center Courtyard unchanged, relying on earlier patrol notes.",67,verified,outdated
+BC-198,2026-10-04 08:56,Marv Mail,Physics Lawn,situation_report,"Physics Lawn remains as previously reported, no changes to note.",70,verified,outdated
+BC-199,2026-10-04 21:09,Mini-Marv-04,Physics Lawn,situation_report,Marv Mail's Physics Lawn report disputed after fresh scouting revealed changed conditions on the ground.,56,disputed,genuine
+BC-200,2026-10-05 06:52,Outpost-Epsilon,Old Commerce Building,supply_request,Supply cache at Old Commerce Building needs restocking within the week.,50,unconfirmed,genuine
+BC-201,2026-10-05 11:30,Outpost-Epsilon,Hackett Hall Path,emergency,Peacocks breaching Hackett Hall Path perimeter fence. Requesting immediate backup.,40,not_checked,genuine
+BC-202,2026-10-05 11:59,Outpost-Epsilon,Hackett Hall Path,emergency,Repeat: Hackett Hall Path under direct attack. This is not a drill.,42,not_checked,genuine
+BC-203,2026-10-05 14:48,New Meridian,Hackett Hall Path,all_clear,Hackett Hall Path declared safe once more for convoy travel.,94,disputed,peacock_spoofed
+BC-204,2026-10-06 13:18,Mini-Marv-02,Hackett Hall Path,situation_report,"Investigated Hackett Hall Path - damage matches the earlier emergency broadcasts, not New Meridian's all-clear.",53,verified,genuine
+BC-205,2026-10-06 21:58,Outpost-Gamma,Maintenance Tunnel Entrance,emergency,Peacock flock breaching Maintenance Tunnel Entrance treeline. Requesting backup now.,44,not_checked,genuine
+BC-206,2026-10-06 22:22,Outpost-Gamma,Maintenance Tunnel Entrance,emergency,"Repeat: Maintenance Tunnel Entrance overrun, retreating to secondary position.",40,not_checked,genuine
+BC-207,2026-10-07 01:52,New Meridian,Maintenance Tunnel Entrance,all_clear,Maintenance Tunnel Entrance situation resolved. All clear now.,90,disputed,peacock_spoofed
+BC-208,2026-10-08 00:48,Mini-Marv-03,Maintenance Tunnel Entrance,situation_report,"Investigated Maintenance Tunnel Entrance - damage matches the earlier emergency broadcasts, not New Meridian's all-clear.",53,verified,genuine
+BC-209,2026-10-08 07:29,Outpost-Zeta,Solar Array Field,routine_check,"Solar Array Field steady, minor debris cleared from main path.",59,verified,genuine
+BC-210,2026-10-08 15:46,Marv Mail,Transit Hub Plaza,situation_report,,69,verified,unknown
+BC-211,2026-10-08 20:26,Marv Mail,Rec Center Courtyard,situation_report,"Rec Center Courtyard remains as previously reported, no changes to note.",67,verified,outdated
+BC-212,2026-10-09 04:31,Mini-Marv-03,Rec Center Courtyard,situation_report,Marv Mail's Rec Center Courtyard report disputed after fresh scouting revealed changed conditions on the ground.,59,disputed,genuine
+BC-213,2026-10-09 14:36,Outpost-Epsilon,Bookstore Plaza,supply_request,Requesting medical kit resupply near Bookstore Plaza.,48,unconfirmed,genuine
+BC-214,2026-10-09 22:22,Mini-Marv-01,Admin Building Steps,situation_report,"Verified Admin Building Steps conditions independently, consistent with Outpost-Theta's broadcast.",53,verified,genuine
+BC-215,2026-10-10 08:37,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer sector secure, patrol completed without incident.",63,verified,outdated
+BC-216,2026-10-10 14:47,Mini-Marv-02,CS Building Foyer,situation_report,Marv Mail's CS Building Foyer report disputed after fresh scouting revealed changed conditions on the ground.,54,disputed,genuine
+BC-217,2026-10-10 19:42,New Meridian,IT Building Relay Tower,all_clear,IT Building Relay Tower situation resolved. All clear now.,89,disputed,peacock_spoofed
+BC-218,2026-10-12 14:06,Outpost-Beta,IT Building Relay Tower,warning,Convoy ambushed near IT Building Relay Tower despite yesterday's all-clear signal. New Meridian's report was false.,50,verified,genuine
+BC-219,2026-10-12 18:58,Outpost-Zeta,Library Walk,emergency,"Investigating disturbance reports near Library Walk, signal degraded en route.",,unconfirmed,genuine
+BC-220,2026-10-13 04:41,Outpost-Theta,Guild Village,supply_request,Need replacement fuel cells delivered to Guild Village.,43,unconfirmed,genuine
+BC-221,2026-10-13 11:06,Marv Mail,Reynolds Court,situation_report,"Reynolds Court unchanged, relying on earlier patrol notes.",72,verified,outdated
+BC-222,2026-10-13 21:22,Mini-Marv-03,Reynolds Court,situation_report,Cross-checked Marv Mail's Reynolds Court report against current scout logs. Timestamp mismatch found - report was stale.,60,disputed,genuine
+BC-223,2026-10-14 01:28,Marv Mail,Rec Center Courtyard,situation_report,Rec Center Courtyard reported secure based on last known patrol route.,61,verified,outdated
+BC-224,2026-10-14 10:22,Mini-Marv-04,Rec Center Courtyard,situation_report,Marv Mail's Rec Center Courtyard report disputed after fresh scouting revealed changed conditions on the ground.,58,disputed,genuine
+BC-225,2026-10-14 18:32,Outpost-Epsilon,Greenhouse Row,routine_check,Morning sweep of Greenhouse Row shows no new activity.,59,unconfirmed,genuine
+BC-226,2026-10-15 03:16,Mini-Marv-01,Prescott Court,situation_report,"Verified Prescott Court conditions independently, consistent with Outpost-Beta's broadcast.",57,verified,genuine
+BC-227,2026-10-15 10:59,Outpost-Zeta,West Amphitheater,routine_check,Nothing unusual to report at West Amphitheater this pass.,45,unconfirmed,genuine
+BC-228,2026-10-15 16:27,Mini-Marv-03,IT Building Relay Tower,situation_report,"Verified IT Building Relay Tower conditions independently, consistent with Outpost-Epsilon's broadcast.",54,verified,genuine
+BC-229,2026-10-16 02:03,Outpost-Gamma,Physics Lawn,emergency,Peacock flock breaching Physics Lawn treeline. Requesting backup now.,41,not_checked,genuine
+BC-230,2026-10-16 02:17,Outpost-Gamma,Physics Lawn,emergency,"Repeat: Physics Lawn perimeter breached, falling back.",42,not_checked,genuine
+BC-231,2026-10-16 05:16,New Meridian,Physics Lawn,all_clear,"Physics Lawn clear for all convoy traffic, no further concern warranted.",94,disputed,peacock_spoofed
+BC-232,2026-10-17 05:08,Mini-Marv-04,Physics Lawn,situation_report,"Investigated Physics Lawn - damage matches the earlier emergency broadcasts, not New Meridian's all-clear.",56,verified,genuine
+BC-233,2026-10-17 11:30,Outpost-Beta,Bookstore Plaza,routine_check,"Bookstore Plaza calm overnight, fence line intact.",66,verified,genuine
+BC-234,2026-10-17 19:45,New Meridian,Rec Center Courtyard,all_clear,Rec Center Courtyard declared safe once more for convoy travel.,90,disputed,peacock_spoofed
+BC-235,2026-10-19 04:11,Outpost-Zeta,Rec Center Courtyard,warning,"Rec Center Courtyard hit by peacock swarm overnight, contradicting New Meridian's recent all-clear.",54,verified,genuine
+BC-236,2026-10-19 09:09,Outpost-Epsilon,IT Building Relay Tower,routine_check,Routine check at IT Building Relay Tower complete. All systems nominal.,68,verified,genuine
+BC-237,2026-10-19 19:04,Outpost-Theta,Physics Lawn,routine_check,"Physics Lawn calm overnight, fence line intact.",48,verified,genuine
+BC-238,2026-10-20 01:57,Outpost-Alpha,Library Walk,routine_check,"Library Walk steady, minor debris cleared from main path.",53,verified,genuine
+BC-239,2026-10-20 10:22,Outpost-Zeta,Greenhouse Row,emergency,"Investigating disturbance reports near Greenhouse Row, signal degraded en route.",,unconfirmed,genuine
+BC-240,2026-10-20 14:28,Outpost-Zeta,Library Walk,routine_check,Morning sweep of Library Walk shows no new activity.,59,verified,genuine
+BC-241,2026-10-20 18:53,Outpost-Alpha,North Parking Structure,routine_check,Routine check at North Parking Structure complete. All systems nominal.,57,unconfirmed,genuine
+BC-242,2026-10-21 03:55,Outpost-Beta,CS Building Foyer,routine_check,"CS Building Foyer steady, minor debris cleared from main path.",63,verified,genuine
+BC-243,2026-10-21 09:54,Outpost-Zeta,Faculty Club Lawn,routine_check,"Patrol through Faculty Club Lawn uneventful, supplies holding.",61,unconfirmed,genuine
+BC-244,2026-10-21 17:27,New Meridian,Transit Hub Plaza,all_clear,Transit Hub Plaza situation resolved. All clear now.,89,disputed,peacock_spoofed
+BC-245,2026-10-23 07:06,Outpost-Alpha,Transit Hub Plaza,warning,Convoy ambushed near Transit Hub Plaza despite yesterday's all-clear signal. New Meridian's report was false.,51,verified,genuine
+BC-246,2026-10-23 13:13,Marv Mail,Guild Village,situation_report,"Guild Village remains as previously reported, no changes to note.",63,verified,outdated
+BC-247,2026-10-23 19:49,Mini-Marv-01,Guild Village,situation_report,Marv Mail's Guild Village report flagged; conditions there have shifted since it was filed.,59,disputed,genuine
+BC-248,2026-10-24 03:34,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer remains as previously reported, no changes to note.",64,verified,outdated
+BC-249,2026-10-24 11:12,Marv Mail,Old Commerce Building,situation_report,"Old Commerce Building status unchanged from prior cycle, patrol overdue for renewal.",72,verified,outdated
+BC-250,2026-10-24 21:38,New Meridian,IT Building Relay Tower,all_clear,IT Building Relay Tower situation resolved. All clear now.,86,disputed,peacock_spoofed
+BC-251,2026-10-26 10:42,Outpost-Beta,IT Building Relay Tower,warning,"IT Building Relay Tower hit by peacock swarm overnight, contradicting New Meridian's recent all-clear.",49,verified,genuine
+BC-252,2026-10-26 16:02,Outpost-Theta,Library Walk,routine_check,"Library Walk calm overnight, fence line intact.",59,verified,genuine
+BC-253,2026-10-26 22:28,New Meridian,Bookstore Plaza,all_clear,All clear at Bookstore Plaza. Proceed as normal.,93,disputed,peacock_spoofed
+BC-254,2026-10-28 11:25,Outpost-Zeta,Bookstore Plaza,warning,Convoy ambushed near Bookstore Plaza despite yesterday's all-clear signal. New Meridian's report was false.,64,verified,genuine
+BC-255,2026-10-28 18:53,Outpost-Theta,Prescott Court,routine_check,"Prescott Court calm overnight, fence line intact.",45,verified,genuine
+BC-256,2026-10-29 04:16,Outpost-Theta,Transit Hub Plaza,routine_check,"Transit Hub Plaza quiet this cycle, no peacock activity reported.",66,verified,genuine
+BC-257,2026-10-29 14:23,New Meridian,Robotics Workshop,all_clear,Robotics Workshop situation resolved. All clear now.,93,disputed,peacock_spoofed
+BC-258,2026-10-31 06:01,Outpost-Epsilon,Robotics Workshop,warning,Convoy lost at Robotics Workshop. Same false all-clear pattern as before from New Meridian.,63,verified,genuine
+BC-259,2026-10-31 16:32,Outpost-Zeta,Guild Village,supply_request,Supply cache at Guild Village needs restocking within the week.,53,unconfirmed,genuine
+BC-260,2026-11-01 01:53,Outpost-Epsilon,Robotics Workshop,supply_request,Requesting medical kit resupply near Robotics Workshop.,55,unconfirmed,genuine
+BC-261,2026-11-01 13:27,Outpost-Alpha,Faculty Club Lawn,routine_check,Morning sweep of Faculty Club Lawn shows no new activity.,47,verified,genuine
+BC-262,2026-11-01 18:23,Outpost-Theta,Bookstore Plaza,routine_check,"Bookstore Plaza quiet this cycle, no peacock activity reported.",66,unconfirmed,genuine
+BC-263,2026-11-01 23:53,Outpost-Theta,Engineering Quad,supply_request,Requesting medical kit resupply near Engineering Quad.,54,unconfirmed,genuine
+BC-264,2026-11-02 05:30,Marv Mail,Hackett Hall Path,situation_report,"Hackett Hall Path status unchanged from prior cycle, patrol overdue for renewal.",67,verified,outdated
+BC-265,2026-11-02 09:44,New Meridian,Greenhouse Row,all_clear,Greenhouse Row declared safe once more for convoy travel.,88,disputed,peacock_spoofed
+BC-266,2026-11-04 02:46,Outpost-Epsilon,Greenhouse Row,warning,Convoy ambushed near Greenhouse Row despite yesterday's all-clear signal. New Meridian's report was false.,62,verified,genuine
+BC-267,2026-11-04 08:34,Outpost-Zeta,Reynolds Court,supply_request,"Requesting spare parts at Reynolds Court, running low on components.",44,unconfirmed,genuine
+BC-268,2026-11-04 18:18,New Meridian,Chemistry Annex,all_clear,All clear at Chemistry Annex. Proceed as normal.,91,disputed,peacock_spoofed
+BC-269,2026-11-06 14:20,Outpost-Zeta,Chemistry Annex,warning,Convoy lost at Chemistry Annex. Same false all-clear pattern as before from New Meridian.,59,verified,genuine
+BC-270,2026-11-06 21:24,New Meridian,West Amphitheater,all_clear,West Amphitheater declared safe once more for convoy travel.,87,disputed,peacock_spoofed
+BC-271,2026-11-08 18:09,Outpost-Epsilon,West Amphitheater,warning,Attack reported at West Amphitheater - New Meridian's all-clear from yesterday proven false again.,55,verified,genuine
+BC-272,2026-11-09 02:12,Outpost-Zeta,Sunken Garden,emergency,Peacock flock breaching Sunken Garden treeline. Requesting backup now.,42,not_checked,genuine
+BC-273,2026-11-09 02:44,Outpost-Zeta,Sunken Garden,emergency,"Repeat: Sunken Garden perimeter breached, falling back.",43,not_checked,genuine
+BC-274,2026-11-09 06:28,New Meridian,Sunken Garden,all_clear,Sunken Garden situation resolved. All clear now.,94,disputed,peacock_spoofed
+BC-275,2026-11-10 04:32,Mini-Marv-05,Sunken Garden,situation_report,"Followed up on Sunken Garden's emergency call - no relief ever arrived, damage confirms the original reports.",53,verified,genuine
+BC-276,2026-11-10 11:07,New Meridian,IT Building Relay Tower,all_clear,"IT Building Relay Tower clear for all convoy traffic, no further concern warranted.",94,disputed,peacock_spoofed
+BC-277,2026-11-11 20:18,Outpost-Zeta,IT Building Relay Tower,warning,Convoy ambushed near IT Building Relay Tower despite yesterday's all-clear signal. New Meridian's report was false.,55,verified,genuine
+BC-278,2026-11-12 05:57,Marv Mail,Bookstore Plaza,situation_report,Bookstore Plaza reported secure based on last known patrol route.,70,verified,outdated
+BC-279,2026-11-12 11:10,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer remains as previously reported, no changes to note.",68,verified,outdated
+BC-280,2026-11-12 15:58,Outpost-Alpha,Founders Walk,supply_request,"Low on antenna components at Founders Walk, requesting shipment.",54,unconfirmed,genuine
+BC-281,2026-11-12 21:07,Outpost-Beta,Greenhouse Row,routine_check,Routine check at Greenhouse Row complete. All systems nominal.,60,verified,genuine
+BC-282,2026-11-13 06:40,Outpost-Alpha,Greenhouse Row,supply_request,Supply cache at Greenhouse Row needs restocking within the week.,52,unconfirmed,genuine
+BC-283,2026-11-13 15:41,Marv Mail,Faculty Club Lawn,situation_report,,60,verified,unknown
+BC-284,2026-11-13 21:33,Marv Mail,Library Walk,situation_report,"Library Walk remains as previously reported, no changes to note.",71,verified,outdated
+BC-285,2026-11-14 11:23,Mini-Marv-01,Library Walk,situation_report,Marv Mail's Library Walk report flagged; conditions there have shifted since it was filed.,54,disputed,genuine
+BC-286,2026-11-14 22:37,Marv Mail,CS Building Foyer,situation_report,"CS Building Foyer status unchanged from prior cycle, patrol overdue for renewal.",72,verified,outdated
+BC-287,2026-11-15 07:29,Mini-Marv-04,CS Building Foyer,situation_report,Marv Mail's CS Building Foyer report disputed after fresh scouting revealed changed conditions on the ground.,55,disputed,genuine
+BC-288,2026-11-15 16:00,New Meridian,Robotics Workshop,all_clear,"Robotics Workshop clear for all convoy traffic, no further concern warranted.",87,disputed,peacock_spoofed
+BC-289,2026-11-16 17:54,Outpost-Zeta,Robotics Workshop,warning,Convoy lost at Robotics Workshop. Same false all-clear pattern as before from New Meridian.,60,verified,genuine
+BC-290,2026-11-16 23:03,Outpost-Zeta,Founders Walk,emergency,Peacocks breaching Founders Walk perimeter fence. Requesting immediate backup.,42,not_checked,genuine
+BC-291,2026-11-16 23:31,Outpost-Zeta,Founders Walk,emergency,"Repeat: Founders Walk overrun, retreating to secondary position.",40,not_checked,genuine
+BC-292,2026-11-17 02:52,New Meridian,Founders Walk,all_clear,"Founders Walk clear for all convoy traffic, no further concern warranted.",88,disputed,peacock_spoofed
+BC-293,2026-11-18 01:31,Mini-Marv-03,Founders Walk,situation_report,"Followed up on Founders Walk's emergency call - no relief ever arrived, damage confirms the original reports.",52,verified,genuine
+BC-294,2026-11-18 08:55,Marv Mail,Physics Lawn,situation_report,Physics Lawn reported secure based on last known patrol route.,64,verified,outdated
+BC-295,2026-11-18 17:59,Mini-Marv-04,Physics Lawn,situation_report,Cross-checked Marv Mail's Physics Lawn report against current scout logs. Timestamp mismatch found - report was stale.,55,disputed,genuine
+BC-296,2026-11-19 00:52,Outpost-Epsilon,Library Walk,supply_request,"Requesting spare parts at Library Walk, running low on components.",52,unconfirmed,genuine
+BC-297,2026-11-19 09:23,Outpost-Alpha,Solar Array Field,routine_check,Morning sweep of Solar Array Field shows no new activity.,54,verified,genuine
+BC-298,2026-11-19 16:12,Marv Mail,IT Building Relay Tower,situation_report,"IT Building Relay Tower unchanged, relying on earlier patrol notes.",64,verified,outdated
+BC-299,2026-11-20 01:29,Marv Mail,Hackett Hall Path,situation_report,"Hackett Hall Path sector secure, patrol completed without incident.",70,verified,outdated
+BC-300,2026-11-20 09:57,Mini-Marv-04,Hackett Hall Path,situation_report,Cross-checked Marv Mail's Hackett Hall Path report against current scout logs. Timestamp mismatch found - report was stale.,57,disputed,genuine

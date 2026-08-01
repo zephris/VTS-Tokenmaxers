@@ -149,6 +149,8 @@ activemq-data/
 
 # Environments
 .env
+.env.local
+.env.*.local
 .envrc
 .venv
 env/
@@ -180,6 +182,16 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Node / Vue / Express
+node_modules/
+.pnpm-store/
+*.tsbuildinfo
+apps/web/dist/
+apps/server/dist/
+packages/common/dist/
+apps/server/data/*.db
+apps/server/data/*.db-*
 
 # PyCharm
 #   JetBrains specific template is maintained in a separate JetBrains.gitignore that can
