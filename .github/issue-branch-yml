@@ -1,0 +1,2 @@
+# .github/issue-branch.yaml
+branchName: "feature/issue-${{ env.ISSUE_NUMBER }}"

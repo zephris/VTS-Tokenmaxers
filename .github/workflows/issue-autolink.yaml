@@ -1,0 +1,22 @@
+name: "Issue Autolink"
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create branch for issue
+        uses: actions/checkout@v3
+      - name: Get issue number from PR title
+        id: get-issue-number
+        run: |
+          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE '#[0-9]+' | tr -d '#')
+          echo "ISSUE_NUMBER=$ISSUE_NUMBER" >> $GITHUB_ENV
+      - name: Create branch for issue
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "issue-${{ env.ISSUE_NUMBER }}"
+          git push origin "issue-${{ env.ISSUE_NUMBER }}"
