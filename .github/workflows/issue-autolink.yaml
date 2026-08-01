@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   create-branch:
@@ -44,6 +45,8 @@ jobs:
         env:
           BRANCH_NAME: ${{ steps.branch-name.outputs.name }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -52,10 +55,17 @@ jobs:
 
           if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null 2>&1; then
             echo "Branch $BRANCH_NAME already exists"
-            echo "Branch already exists for issue ${{ github.event.issue.number }}"
-            exit 0
+            echo "Branch already exists for issue $ISSUE_NUMBER"
+            MESSAGE="Branch already exists for issue #$ISSUE_NUMBER: \\`$BRANCH_NAME\\`"
+          else
+            git checkout -b "$BRANCH_NAME"
+            git push --set-upstream origin "$BRANCH_NAME"
+            echo "Branch created successfully for issue $ISSUE_NUMBER: $BRANCH_NAME"
+            MESSAGE="Branch created for issue #$ISSUE_NUMBER: \\`$BRANCH_NAME\\`"
           fi
 
-          git checkout -b "$BRANCH_NAME"
-          git push --set-upstream origin "$BRANCH_NAME"
-          echo "Branch created successfully for issue ${{ github.event.issue.number }}: $BRANCH_NAME"
+          curl -s -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments \
+            -d "{\"body\":\"$MESSAGE\"}" > /dev/null
