@@ -46,6 +46,13 @@ function stationIcon(type: StationSummary['senderType']): Component {
 }
 
 const stationCountLabel = computed(() => (props.loading ? '' : String(props.stations.length)));
+const orderedStations = computed(() => {
+  const stationId = props.account?.stationId;
+  if (!stationId) return props.stations;
+  const current = props.stations.find((station) => station.senderId === stationId);
+  if (!current) return props.stations;
+  return [current, ...props.stations.filter((station) => station.senderId !== stationId)];
+});
 
 function openMessages() {
   messagesExpanded.value = true;
@@ -105,7 +112,7 @@ function chooseStation(senderId: string) {
             <NSpin v-if="loading" size="small" class="station-loading" />
             <NScrollbar v-else style="max-height: calc(100vh - 390px)">
               <button
-                v-for="station in stations"
+                v-for="station in orderedStations"
                 :key="station.senderId"
                 type="button"
                 :class="['station-link', { active: selectedStationId === station.senderId && currentView === 'messages' }]"
