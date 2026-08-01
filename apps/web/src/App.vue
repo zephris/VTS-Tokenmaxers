@@ -338,6 +338,7 @@ onUnmounted(() => window.removeEventListener('resize', updateViewport));
               :display-mode="displayMode"
               :secret-phrase="savedPhrase"
               :current-station-id="currentAccount.stationId"
+              :model-configured="health?.steganography.configured ?? false"
               @select-station="selectStation"
               @station-updated="updateStation"
               @open-settings="navigate('settings')"

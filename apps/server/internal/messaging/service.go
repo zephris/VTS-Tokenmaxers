@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"strings"
+	"time"
 
+	"vts-tokenmaxers/apps/server/internal/domain"
 	"vts-tokenmaxers/apps/server/internal/stego"
 	"vts-tokenmaxers/apps/server/internal/transcript"
 )
@@ -12,11 +14,12 @@ import (
 var ErrInvalidStation = errors.New("a valid stationId is required")
 
 type EncodeRequest struct {
-	ConversationID string `json:"conversationId"`
-	StationID      string `json:"stationId"`
-	Sender         string `json:"sender"`
-	SecretPhrase   string `json:"secretPhrase"`
-	Plaintext      string `json:"plaintext"`
+	ConversationID string               `json:"conversationId"`
+	StationID      string               `json:"stationId"`
+	Sender         string               `json:"sender"`
+	SecretPhrase   string               `json:"secretPhrase"`
+	Plaintext      string               `json:"plaintext"`
+	BroadcastType  domain.BroadcastType `json:"broadcastType"`
 }
 
 type EncodeResponse struct {
@@ -33,11 +36,12 @@ type EncodeResponse struct {
 }
 
 type DecodeRequest struct {
-	ConversationID string `json:"conversationId"`
-	StationID      string `json:"stationId"`
-	Sender         string `json:"sender"`
-	SecretPhrase   string `json:"secretPhrase"`
-	CarrierText    string `json:"carrierText"`
+	ConversationID string               `json:"conversationId"`
+	StationID      string               `json:"stationId"`
+	Sender         string               `json:"sender"`
+	SecretPhrase   string               `json:"secretPhrase"`
+	CarrierText    string               `json:"carrierText"`
+	BroadcastType  domain.BroadcastType `json:"broadcastType"`
 }
 
 type DecodeResponse struct {
@@ -91,6 +95,10 @@ func (s *Service) Encode(ctx context.Context, request EncodeRequest) (EncodeResp
 	if request.Plaintext == "" || len(request.Plaintext) > 4000 {
 		return EncodeResponse{}, errors.New("plaintext must contain between 1 and 4000 characters")
 	}
+	broadcastType, err := normalizeBroadcastType(request.BroadcastType)
+	if err != nil {
+		return EncodeResponse{}, err
+	}
 	request.ConversationID = strings.TrimSpace(request.ConversationID)
 	request.StationID = strings.TrimSpace(request.StationID)
 	snapshot, err := s.transcripts.Snapshot(ctx, request.ConversationID, request.StationID)
@@ -108,14 +116,20 @@ func (s *Service) Encode(ctx context.Context, request EncodeRequest) (EncodeResp
 	if err != nil {
 		return EncodeResponse{}, err
 	}
+	encoded.Record.BroadcastType = string(broadcastType)
+	encoded.Record.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 	status := s.codec.Status()
 	if err := s.transcripts.Append(ctx, request.ConversationID, request.StationID, encoded.Record, encoded.SyncCode, status.ModelFingerprint); err != nil {
+		return EncodeResponse{}, err
+	}
+	persisted, err := s.transcripts.Snapshot(ctx, request.ConversationID, request.StationID)
+	if err != nil {
 		return EncodeResponse{}, err
 	}
 	return EncodeResponse{
 		ConversationID: encoded.ConversationID, StationID: request.StationID, Sender: encoded.Sender,
 		Plaintext: encoded.Plaintext, CarrierText: encoded.CarrierText, Record: encoded.Record,
-		Records: encoded.Records, SyncCode: encoded.SyncCode, Algorithm: encoded.Algorithm,
+		Records: persisted.Records, SyncCode: encoded.SyncCode, Algorithm: encoded.Algorithm,
 		ModelFingerprint: status.ModelFingerprint,
 	}, nil
 }
@@ -129,6 +143,10 @@ func (s *Service) Decode(ctx context.Context, request DecodeRequest) (DecodeResp
 	}
 	if strings.TrimSpace(request.CarrierText) == "" || len(request.CarrierText) > 32_000 {
 		return DecodeResponse{}, errors.New("carrierText must contain between 1 and 32000 characters")
+	}
+	broadcastType, err := normalizeBroadcastType(request.BroadcastType)
+	if err != nil {
+		return DecodeResponse{}, err
 	}
 	request.ConversationID = strings.TrimSpace(request.ConversationID)
 	request.StationID = strings.TrimSpace(request.StationID)
@@ -147,16 +165,35 @@ func (s *Service) Decode(ctx context.Context, request DecodeRequest) (DecodeResp
 	if err != nil {
 		return DecodeResponse{}, err
 	}
+	decoded.Record.BroadcastType = string(broadcastType)
+	decoded.Record.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 	status := s.codec.Status()
 	if err := s.transcripts.Append(ctx, request.ConversationID, request.StationID, decoded.Record, decoded.SyncCode, status.ModelFingerprint); err != nil {
+		return DecodeResponse{}, err
+	}
+	persisted, err := s.transcripts.Snapshot(ctx, request.ConversationID, request.StationID)
+	if err != nil {
 		return DecodeResponse{}, err
 	}
 	return DecodeResponse{
 		ConversationID: decoded.ConversationID, StationID: request.StationID, Sender: decoded.Sender,
 		CarrierText: decoded.CarrierText, Plaintext: decoded.Plaintext, Record: decoded.Record,
-		Records: decoded.Records, SyncCode: decoded.SyncCode, Algorithm: decoded.Algorithm,
+		Records: persisted.Records, SyncCode: decoded.SyncCode, Algorithm: decoded.Algorithm,
 		ModelFingerprint: status.ModelFingerprint,
 	}, nil
+}
+
+func normalizeBroadcastType(value domain.BroadcastType) (domain.BroadcastType, error) {
+	if value == "" {
+		return domain.BroadcastRoutineCheck, nil
+	}
+	switch value {
+	case domain.BroadcastAllClear, domain.BroadcastWarning, domain.BroadcastSupplyRequest,
+		domain.BroadcastSituation, domain.BroadcastRoutineCheck, domain.BroadcastEmergency:
+		return value, nil
+	default:
+		return "", errors.New("broadcastType is invalid")
+	}
 }
 
 func validateStation(stationID string) error {

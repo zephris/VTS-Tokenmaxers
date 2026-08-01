@@ -23,6 +23,8 @@ type Record struct {
 	From           string `json:"from"`
 	SenderSequence uint64 `json:"senderSequence"`
 	CarrierText    string `json:"carrierText"`
+	BroadcastType  string `json:"broadcastType,omitempty"`
+	CreatedAt      string `json:"createdAt,omitempty"`
 }
 
 type EncodeRequest struct {

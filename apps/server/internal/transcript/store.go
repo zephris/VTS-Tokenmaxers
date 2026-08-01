@@ -38,6 +38,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 			sender TEXT NOT NULL,
 			sender_sequence INTEGER NOT NULL,
 			carrier_text TEXT NOT NULL,
+			broadcast_type TEXT NOT NULL DEFAULT 'routine_check',
 			sync_code TEXT NOT NULL DEFAULT '',
 			model_fingerprint TEXT NOT NULL DEFAULT '',
 			created_at TEXT NOT NULL,
@@ -54,7 +55,8 @@ func (s *Store) Migrate(ctx context.Context) error {
 
 func (s *Store) Snapshot(ctx context.Context, conversationID, stationID string) (Snapshot, error) {
 	rows, err := s.db.QueryContext(ctx, `
-		SELECT record_index, sender, sender_sequence, carrier_text, sync_code, model_fingerprint
+		SELECT record_index, sender, sender_sequence, carrier_text, broadcast_type,
+			created_at, sync_code, model_fingerprint
 		FROM steganography_records
 		WHERE conversation_id = ? AND station_id = ?
 		ORDER BY record_index ASC
@@ -68,7 +70,10 @@ func (s *Store) Snapshot(ctx context.Context, conversationID, stationID string) 
 	for rows.Next() {
 		var record stego.Record
 		var syncCode, fingerprint string
-		if err := rows.Scan(&record.Index, &record.From, &record.SenderSequence, &record.CarrierText, &syncCode, &fingerprint); err != nil {
+		if err := rows.Scan(
+			&record.Index, &record.From, &record.SenderSequence, &record.CarrierText,
+			&record.BroadcastType, &record.CreatedAt, &syncCode, &fingerprint,
+		); err != nil {
 			return Snapshot{}, fmt.Errorf("scan public transcript: %w", err)
 		}
 		snapshot.Records = append(snapshot.Records, record)
@@ -110,10 +115,10 @@ func (s *Store) Append(
 	_, err = tx.ExecContext(ctx, `
 		INSERT INTO steganography_records (
 			conversation_id, station_id, record_index, sender, sender_sequence,
-			carrier_text, sync_code, model_fingerprint, created_at
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+			carrier_text, broadcast_type, sync_code, model_fingerprint, created_at
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`, conversationID, stationID, record.Index, record.From, record.SenderSequence,
-		record.CarrierText, syncCode, modelFingerprint, time.Now().UTC().Format(time.RFC3339))
+		record.CarrierText, record.BroadcastType, syncCode, modelFingerprint, recordCreatedAt(record))
 	if err != nil {
 		return fmt.Errorf("append public transcript: %w", err)
 	}
@@ -121,4 +126,11 @@ func (s *Store) Append(
 		return fmt.Errorf("commit transcript append: %w", err)
 	}
 	return nil
+}
+
+func recordCreatedAt(record stego.Record) string {
+	if record.CreatedAt != "" {
+		return record.CreatedAt
+	}
+	return time.Now().UTC().Format(time.RFC3339)
 }

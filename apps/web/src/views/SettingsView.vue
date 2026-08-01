@@ -27,12 +27,12 @@ watch(() => props.savedPhrase, (value) => { draft.value = value; });
 
 function generatePhrase() {
   const words = new Set<string>();
-  while (words.size < 5) {
+  while (words.size < 6) {
     const random = new Uint32Array(1);
     window.crypto.getRandomValues(random);
     words.add(phraseWords[(random[0] ?? 0) % phraseWords.length] ?? phraseWords[0]);
   }
-  draft.value = [...words].join('-');
+  draft.value = [...words].join(' ');
   savedNotice.value = false;
 }
 

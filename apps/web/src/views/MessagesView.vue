@@ -13,8 +13,14 @@ import {
   NSelect,
   NSpin,
 } from 'naive-ui';
-import { broadcastTypes, type Broadcast, type BroadcastType, type StationSummary } from '@vts/common';
-import { fetchStationBroadcasts } from '../api';
+import {
+  broadcastTypes,
+  type Broadcast,
+  type BroadcastType,
+  type StationSummary,
+  type SteganographyRecord,
+} from '@vts/common';
+import { encodeSteganography, fetchStationBroadcasts, fetchSteganographyConversation } from '../api';
 import BroadcastItem from '../components/BroadcastItem.vue';
 import type { DisplayMode } from '../composables/useSessionPreferences';
 import { titleCase } from '../utils/format';
@@ -26,6 +32,7 @@ const props = defineProps<{
   displayMode: DisplayMode;
   secretPhrase: string;
   currentStationId?: string;
+  modelConfigured: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -36,8 +43,11 @@ const emit = defineEmits<{
 
 const remoteBroadcasts = reactive<Record<string, Broadcast[]>>({});
 const localBroadcasts = reactive<Record<string, Broadcast[]>>({});
-const localStubIds = new Set<string>();
+const secureRecords = reactive<Record<string, SteganographyRecord[]>>({});
+const timelineBroadcasts = reactive<Record<string, Broadcast[]>>({});
+const sessionPlaintexts = reactive<Record<string, string>>({});
 const loading = ref(false);
+const sending = ref(false);
 const error = ref<string>();
 const draft = ref('');
 const selectedType = ref<BroadcastType>('routine_check');
@@ -47,13 +57,67 @@ const historyScroll = ref<HTMLElement>();
 const selectedStation = computed(() => props.stations.find((station) => station.senderId === props.selectedStationId));
 const broadcasts = computed(() => {
   if (!props.selectedStationId) return [];
-  return [...(remoteBroadcasts[props.selectedStationId] ?? []), ...(localBroadcasts[props.selectedStationId] ?? [])]
-    .sort((a, b) => new Date(a.timestamp.replace(' ', 'T')).valueOf() - new Date(b.timestamp.replace(' ', 'T')).valueOf());
+  return timelineBroadcasts[props.selectedStationId] ?? [];
 });
 const typeOptions = broadcastTypes.map((value) => ({ label: titleCase(value), value }));
 const phraseValid = computed(() => props.secretPhrase.length >= 16);
 const canUseComposer = computed(() => Boolean(selectedStation.value && selectedStation.value.senderId === props.currentStationId));
-const canSend = computed(() => canUseComposer.value && draft.value.trim().length > 0 && (sendMode.value === 'plain' || phraseValid.value));
+const canSend = computed(() => canUseComposer.value
+  && !sending.value
+  && draft.value.trim().length > 0
+  && (sendMode.value === 'plain' || (phraseValid.value && props.modelConfigured)));
+const composerNote = computed(() => {
+  if (sendMode.value === 'plain') return 'Local session only';
+  return props.modelConfigured ? 'GPT-2 carrier generation' : 'Model unavailable';
+});
+
+function conversationId(senderId: string): string {
+  return `station-broadcasts:${senderId}`;
+}
+
+function secureRecordId(senderId: string, record: SteganographyRecord): string {
+  return `SECURE-${senderId}-${record.index}`;
+}
+
+function recordToBroadcast(record: SteganographyRecord, station: StationSummary): Broadcast {
+  const id = secureRecordId(station.senderId, record);
+  return {
+    id,
+    timestamp: record.createdAt ?? props.analysisTimestamp ?? new Date().toISOString(),
+    senderId: record.from,
+    location: station.location,
+    type: record.broadcastType ?? 'routine_check',
+    messageText: sessionPlaintexts[id] ?? null,
+    carrierText: record.carrierText,
+    encryptionStatus: 'encrypted',
+    signalStrength: 100,
+    crossCheckStatus: 'not_checked',
+  };
+}
+
+function timestampValue(broadcast: Broadcast): number {
+  const value = new Date(broadcast.timestamp.replace(' ', 'T')).valueOf();
+  return Number.isFinite(value) ? value : 0;
+}
+
+function mergeTimeline(senderId: string, incoming: Broadcast[]) {
+  const timeline = timelineBroadcasts[senderId];
+  if (!timeline) {
+    timelineBroadcasts[senderId] = [...incoming].sort((a, b) => timestampValue(a) - timestampValue(b));
+    return;
+  }
+
+  const existingIds = new Set(timeline.map((broadcast) => broadcast.id));
+  for (const broadcast of incoming) {
+    if (existingIds.has(broadcast.id)) continue;
+    timeline.push(broadcast);
+    existingIds.add(broadcast.id);
+  }
+}
+
+function appendBroadcast(senderId: string, broadcast: Broadcast) {
+  mergeTimeline(senderId, [broadcast]);
+}
 
 function scrollToLatest() {
   void nextTick(() => {
@@ -62,15 +126,30 @@ function scrollToLatest() {
 }
 
 async function loadBroadcasts(senderId?: string) {
-  if (!senderId || remoteBroadcasts[senderId]) {
+  if (!senderId) {
     scrollToLatest();
     return;
   }
   loading.value = true;
   error.value = undefined;
   try {
-    const response = await fetchStationBroadcasts(senderId);
-    remoteBroadcasts[senderId] = response.broadcasts;
+    const datasetRequest = remoteBroadcasts[senderId]
+      ? Promise.resolve(undefined)
+      : fetchStationBroadcasts(senderId);
+    const [dataset, transcript] = await Promise.all([
+      datasetRequest,
+      fetchSteganographyConversation(conversationId(senderId), senderId),
+    ]);
+    if (dataset) remoteBroadcasts[senderId] = dataset.broadcasts;
+    secureRecords[senderId] = transcript.records;
+    const station = props.stations.find((candidate) => candidate.senderId === senderId);
+    if (station) {
+      mergeTimeline(senderId, [
+        ...(remoteBroadcasts[senderId] ?? []),
+        ...transcript.records.map((record) => recordToBroadcast(record, station)),
+        ...(localBroadcasts[senderId] ?? []),
+      ]);
+    }
     scrollToLatest();
   } catch (caught) {
     error.value = caught instanceof Error ? caught.message : 'Could not load station broadcasts.';
@@ -81,53 +160,51 @@ async function loadBroadcasts(senderId?: string) {
 
 watch(() => props.selectedStationId, loadBroadcasts, { immediate: true });
 
-function hashText(value: string): number {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function createCarrier(senderId: string, message: string, type: BroadcastType): string {
-  const openings = [
-    'Visibility is holding steady along the eastern path.',
-    'The morning patrol completed its usual circuit without delay.',
-    'Conditions remain calm around the old garden structures.',
-    'Supplies arrived with the scheduled relay and have been inventoried.',
-    'A light wind has cleared the lower approach since the last check-in.',
-  ];
-  const details = [
-    'We counted the markers twice and everything appears to be in order.',
-    'The next team can proceed on the regular timetable.',
-    'No unusual movement was observed during the latest watch.',
-    'The crew is rotating duties before the next routine inspection.',
-    'A second observer confirmed the report from the ridge.',
-  ];
-  const closings = [
-    'We will send another update after the next round.',
-    'No assistance is needed at this time.',
-    'The station remains available for further instructions.',
-    'We will keep the channel open for the evening relay.',
-    'The team is continuing with normal operations.',
-  ];
-  const seed = hashText(`${props.secretPhrase}\u0000${senderId}\u0000${type}\u0000${message}`);
-  return `${openings[seed % openings.length]} ${details[Math.floor(seed / 7) % details.length]} ${closings[Math.floor(seed / 31) % closings.length]}`;
-}
-
 function nextTimestamp(): string {
   const timestamps = [props.analysisTimestamp, ...broadcasts.value.map((item) => item.timestamp)].filter(Boolean) as string[];
   const latest = Math.max(...timestamps.map((value) => new Date(value.replace(' ', 'T')).valueOf()).filter(Number.isFinite));
   return new Date((Number.isFinite(latest) ? latest : Date.now()) + 60_000).toISOString().slice(0, 16).replace('T', ' ');
 }
 
-function sendBroadcast() {
+async function sendBroadcast() {
   const station = selectedStation.value;
   const message = draft.value.trim();
   if (!station || !message || !canSend.value) return;
 
   const secure = sendMode.value === 'secure';
+  if (secure) {
+    sending.value = true;
+    error.value = undefined;
+    try {
+      const response = await encodeSteganography({
+        conversationId: conversationId(station.senderId),
+        stationId: station.senderId,
+        sender: station.senderId,
+        secretPhrase: props.secretPhrase,
+        plaintext: message,
+        broadcastType: selectedType.value,
+      });
+      const id = secureRecordId(station.senderId, response.record);
+      sessionPlaintexts[id] = message;
+      secureRecords[station.senderId] = response.records;
+      appendBroadcast(station.senderId, recordToBroadcast(response.record, station));
+      const timestamp = response.record.createdAt ?? new Date().toISOString();
+      emit('stationUpdated', {
+        ...station,
+        lastBroadcastAt: timestamp,
+        lastMessagePreview: message,
+        broadcastCount: station.broadcastCount + 1,
+      });
+      draft.value = '';
+      scrollToLatest();
+    } catch (caught) {
+      error.value = caught instanceof Error ? caught.message : 'Secure carrier generation failed. Retry the send.';
+    } finally {
+      sending.value = false;
+    }
+    return;
+  }
+
   const id = `LOCAL-${station.senderId}-${(localBroadcasts[station.senderId]?.length ?? 0) + 1}`;
   const broadcast: Broadcast = {
     id,
@@ -136,14 +213,14 @@ function sendBroadcast() {
     location: station.location,
     type: selectedType.value,
     messageText: message,
-    carrierText: secure ? createCarrier(station.senderId, message, selectedType.value) : null,
-    encryptionStatus: secure ? 'encrypted' : 'plain',
+    carrierText: null,
+    encryptionStatus: 'plain',
     signalStrength: 100,
     crossCheckStatus: 'not_checked',
   };
 
   (localBroadcasts[station.senderId] ??= []).push(broadcast);
-  if (secure) localStubIds.add(id);
+  appendBroadcast(station.senderId, broadcast);
   emit('stationUpdated', {
     ...station,
     lastBroadcastAt: broadcast.timestamp,
@@ -169,7 +246,6 @@ function sendBroadcast() {
               :key="broadcast.id"
               :broadcast="broadcast"
               :display-mode="displayMode"
-              :stub="localStubIds.has(broadcast.id)"
             />
           </div>
         </div>
@@ -189,7 +265,7 @@ function sendBroadcast() {
           <NRadioButton value="secure"><span class="radio-label"><NIcon :component="LockClosedOutline" />Secure</span></NRadioButton>
           <NRadioButton value="plain"><span class="radio-label"><NIcon :component="LockOpenOutline" />Plain</span></NRadioButton>
         </NRadioGroup>
-        <span class="composer-note">Local session only</span>
+        <span class="composer-note">{{ composerNote }}</span>
       </div>
       <div class="composer-input">
         <NInput
@@ -202,14 +278,19 @@ function sendBroadcast() {
           @keydown.ctrl.enter.prevent="sendBroadcast"
           @keydown.meta.enter.prevent="sendBroadcast"
         />
-        <NButton type="primary" circle size="large" :disabled="!canSend" title="Send broadcast" @click="sendBroadcast">
+        <NButton type="primary" circle size="large" :disabled="!canSend" :loading="sending" title="Send broadcast" @click="sendBroadcast">
           <template #icon><NIcon :component="SendOutline" /></template>
         </NButton>
       </div>
       <button v-if="sendMode === 'secure' && !phraseValid" type="button" class="phrase-warning" @click="emit('openSettings')">
         Secure sends need a 16-character secret phrase. Open Settings.
       </button>
-      <span v-else-if="sendMode === 'secure'" class="secure-note">Secure mode currently generates a deterministic carrier stub.</span>
+      <span v-else-if="sendMode === 'secure' && !modelConfigured" class="secure-note">
+        Secure sends are unavailable until the GPT-2 model is enabled on the server.
+      </span>
+      <span v-else-if="sendMode === 'secure'" class="secure-note">
+        Plaintext stays in this tab. Only the generated carrier is stored in the public transcript.
+      </span>
     </section>
   </div>
 </template>

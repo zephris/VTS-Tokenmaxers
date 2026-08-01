@@ -52,7 +52,8 @@ Create an isolated Python environment and install the local model dependencies:
 ```bash
 python3 -m venv apps/server/.venv
 apps/server/.venv/bin/python -m pip install --upgrade pip
-apps/server/.venv/bin/python -m pip install torch transformers
+apps/server/.venv/bin/python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+apps/server/.venv/bin/python -m pip install transformers huggingface-hub
 ```
 
 Preflight the exact command used by the Go server:
@@ -69,6 +70,8 @@ The first run downloads model files and can take several minutes. A successful r
 ```
 
 Set `STEGANOGRAPHY_ENABLED=true` in `apps/server/.env`, return to the repository root, and run `pnpm dev`. The API should report steganography as configured and show the same model fingerprint.
+
+The checked-in local defaults use one carrier trial and leave the strict prose-quality gate off. This keeps a CPU-only GPT-2 proof of concept responsive; it does not weaken the authenticated encryption or transcript synchronization, but generated carrier prose may be rough.
 
 Use two signed-in station identities with one shared phrase to demonstrate encode, transfer of exact carrier text, decode, reply, and transcript convergence. The shared phrase stays in the current browser tab. SQLite persists only the public carrier transcript.
 

@@ -27,7 +27,10 @@ func testStore(t *testing.T) (*Store, *sql.DB) {
 
 func TestAppendAndReadPublicTranscript(t *testing.T) {
 	store, _ := testStore(t)
-	record := stego.Record{Index: 0, From: "Marv", SenderSequence: 0, CarrierText: "The weather today is calm."}
+	record := stego.Record{
+		Index: 0, From: "Marv", SenderSequence: 0, CarrierText: "The weather today is calm.",
+		BroadcastType: "situation_report", CreatedAt: "2026-08-01T08:30:00Z",
+	}
 	if err := store.Append(context.Background(), "delta-channel", "sunken-command", record, "a1b2", "model-v1"); err != nil {
 		t.Fatal(err)
 	}

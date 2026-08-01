@@ -17,7 +17,6 @@ import { formatTimestamp, titleCase } from '../utils/format';
 const props = defineProps<{
   broadcast: Broadcast;
   displayMode: DisplayMode;
-  stub?: boolean;
 }>();
 
 const shownText = computed(() => {
@@ -89,7 +88,6 @@ const checkType = computed(() => {
           </template>
           {{ broadcast.encryptionStatus === 'encrypted' ? 'Encrypted' : 'Unencrypted' }}
         </NTag>
-        <NTag v-if="stub" size="small" type="info" :bordered="false">Stub carrier</NTag>
       </div>
     </div>
   </article>
