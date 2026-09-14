@@ -1,0 +1,12 @@
+node_modules
+dist
+**/dist
+coverage
+**/coverage
+.venv
+pnpm-lock.yaml
+hackathon
+apps/web
+apps/server/src
+apps/server/data
+packages/common/src
