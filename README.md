@@ -97,6 +97,30 @@ Both participants must use the same model revision, tokenizer, protocol settings
 
 See [Local demo setup](docs/local-demo.md) for configuration and troubleshooting, and [Conversation steganography integration](docs/steganography-integration.md) for its API and synchronization contract.
 
+## Steganography Mechanism
+We follows the approach demonstrated by [`nethical6/conversation-steganography`](https://github.com/nethical6/conversation-steganography): it encrypts a private message, then represents the resulting ciphertext through the token choices of a GPT-2-generated conversation.
+
+When sending a message:
+
+1. The shared secret phrase and conversation ID are passed through PBKDF2-HMAC-SHA-256 to derive a 256-bit symmetric key. The phrase is not used as a random seed for GPT-2.
+2. The plaintext is compressed and encrypted with authenticated AES-SIV. The authentication data binds the ciphertext to the conversation, sender, message index, sender sequence, and hash of the preceding public transcript.
+3. The encrypted bytes are converted to a bitstream. Starting from the synchronized conversation prompt, GPT-2 deterministically calculates the possible next tokens at each step.
+4. A coding scheme maps portions of the encrypted bitstream to candidates from that next-token distribution. The selected tokens are appended to the prompt and become ordinary-looking carrier text. GPT-2 therefore constrains the choices to plausible continuations while the particular choices encode the ciphertext.
+
+The receiver runs the process in reverse. Using the exact carrier text and the same GPT-2 weights, tokenizer, prompt, coding settings, and transcript state, the receiver recomputes the candidate set for every token. Each observed token identifies the encoded bits; those bits reconstruct the authenticated ciphertext, which is then verified and decrypted with the key derived from the same shared phrase.
+
+```text
+plaintext
+   -> compress and encrypt with the shared-key-derived AES-SIV key
+   -> encode ciphertext bits as deterministic GPT-2 token choices
+   -> transmit the generated carrier text unchanged
+   -> recompute the same token choices and recover the ciphertext bits
+   -> authenticate, decrypt, and decompress
+   -> recovered plaintext
+```
+
+This mechanism is synchronization-sensitive. Even a small difference in carrier text, model or tokenizer revision, protocol configuration, sender spelling, conversation ID, or prior-message order can change GPT-2's next-token distribution and prevent recovery.
+
 ## Data and Privacy
 
 - SQLite stores station/archive data and public carrier transcript records.
