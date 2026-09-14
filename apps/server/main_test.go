@@ -41,6 +41,17 @@ func TestHealthMatchesSharedContract(t *testing.T) {
 	}
 }
 
+func TestOrcaPodPageIsServed(t *testing.T) {
+	app := newTestServer(t)
+	recorder := request(t, app.routes(), http.MethodGet, "/orca_pog/index.html")
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("status = %d; body = %s", recorder.Code, recorder.Body.String())
+	}
+	if !strings.Contains(recorder.Body.String(), "Matilda Bay") {
+		t.Fatalf("unexpected orca pod page: %s", recorder.Body.String())
+	}
+}
+
 func TestStationRoutesReturnDatasetAndDecodedPathIDs(t *testing.T) {
 	app := newTestServer(t)
 	token := loginAsStation(t, app, "Outpost-Alpha")

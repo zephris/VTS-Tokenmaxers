@@ -153,6 +153,7 @@ func main() {
 
 func (s *server) routes() http.Handler {
 	mux := http.NewServeMux()
+	mux.Handle("GET /orca_pog/", http.StripPrefix("/orca_pog/", http.FileServer(http.Dir("orca_pog"))))
 	mux.HandleFunc("GET /api/health", s.health)
 	mux.HandleFunc("GET /api/auth/stations", s.stationAccounts)
 	mux.HandleFunc("POST /api/auth/login", s.login)
