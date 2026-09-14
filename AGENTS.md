@@ -54,32 +54,18 @@ Run `gofmt` on changed Go files. Do not commit generated directories such as `no
 - Keep `.env` files local. When adding configuration, update `apps/server/.env.example` and the relevant documentation.
 - Treat files under `hackathon/dataset` as source data. Do not rewrite them as incidental formatting cleanup.
 
-## TypeScript API Server (current implementation)
-
-The API server that is currently checked in is `apps/server` (Express 5 + `better-sqlite3`). The Go migration described below is the planned direction; do not delete the Express implementation until it is replaced.
-
-Source layout: `src/index.ts` (routing, server mode), `src/db.ts` (SQLite connection, schema, queries), `src/import.ts` (dataset import), `src/csv.ts` (RFC-4180 parser), `src/ai.ts` (LLM incident brief, loaded only in full mode).
-
-- Dataset import runs on every startup, in one transaction, with `INSERT OR IGNORE`: all 300 broadcasts from `broadcast_message_log.csv` and 14 stations. Deleting the database file therefore restores the full dataset on the next start.
-- `sender_history.csv` supplies 9 sender profiles verbatim (its `location` column is taken from each sender's latest broadcast). The remaining 5 sender IDs (Outpost-Epsilon/Theta/Zeta, Mini-Marv-04/05) get deterministic derived profiles: sender type from the name prefix, first/last seen from broadcast timestamps, reliability from the genuine-label ratio, `current_status` from silence (72+ hours) against the dataset's latest broadcast timestamp.
-- Preserve quoted CSV fields (commas inside quotes) and nullable `message_text`/`signal_strength`; `''` maps to `NULL`. Do not trim, normalize, or spell-check imported values.
-- Schema changes use `PRAGMA user_version` (currently 2); older databases are dropped and re-imported on startup.
-- Server modes: `STEGANOGRAPHY_ENABLED=true` is full mode; unset or `false` is dataset-only. Dataset-only never loads or launches an LLM and `POST /api/ai/incident-summary` returns `403`. `GET /api/health` reports `mode` and `counts`.
-- Station APIs are read-only: `GET /api/stations`, `GET /api/stations/:senderId/broadcasts` (`404` for unknown senders). Keep the `/api` prefix on port `3001`.
-- Configuration lives in `apps/server/.env` (see `.env.example`): `DATABASE_PATH`, `DATASET_DIR`, `STEGANOGRAPHY_ENABLED`, `OPENAI_API_KEY`, `OPENAI_MODEL`.
-- Server tests use Node's built-in runner via tsx: `pnpm --filter @vts/server test` (or `pnpm test`). Keep `src/import.test.ts` green when changing the importer, schema, or CSV handling.
-
 ## Frontend Guidance
 
 - Use Vue 3 Composition API and the existing Naive UI and ECharts dependencies.
 - Match the current operational dashboard styling and interaction patterns.
 - Keep interfaces responsive and keyboard-accessible, and provide explicit loading, empty, success, and error states for network operations.
-- Do not expose secret phrases in URLs, browser logs, analytics, or persisted application state.
+- Keep secret phrases only in the current tab's `sessionStorage`. Never expose them in URLs, browser logs, analytics, durable `localStorage`, or server persistence.
 - The encrypted-chat workflow should make plaintext, generated carrier text, recovered plaintext, transcript synchronization, and model compatibility easy to inspect.
 
 ## Go Server Guidance
 
 - The server uses the standard `net/http` stack; do not reintroduce the deleted TypeScript/Express backend.
+- SQLite is the source of truth for imported station and broadcast data. Startup imports must remain transactional and idempotent so deleting the development database is recoverable.
 - Start the language-model process once and reuse it. Model startup is expensive, and the upstream `ProcessModel` serializes access internally.
 - Build a short-lived `ConversationChain` from the request's secret phrase and preceding public records. Do not retain plaintext passphrases or derived keys between requests.
 - Never trim, normalize, spell-check, or otherwise modify carrier text. Decoding requires the exact generated string.

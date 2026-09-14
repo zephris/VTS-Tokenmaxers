@@ -1,81 +1,131 @@
 # Silent Outposts
 
-A TypeScript monorepo for the Silent Outposts hackathon project: a dashboard for tracking silent outposts, conflicting broadcasts, and evidence-based incident triage in a peacock-disrupted relay network.
+Silent Outposts is a local hackathon demo for finding robot outposts that have gone unexpectedly quiet and exchanging hidden messages through AI-generated carrier text.
 
-## Stack
+## Architecture
 
-- Vue 3, Vite, and Naive UI for the web app.
-- Apache ECharts through Vue ECharts for charts and data exploration.
-- Express 5 and SQLite through `better-sqlite3` for the API and persistence.
-- Vercel AI SDK with the OpenAI provider for evidence-based incident summaries (disabled by default).
-- A shared package for API contracts, schemas, and domain types.
+- Vue 3, Naive UI, and Apache ECharts provide the operational dashboard.
+- A Go `net/http` API owns data access, analysis, and steganography operations.
+- SQLite stores the imported station archive and public steganography transcript records.
+- Incident analysis is currently a deterministic, evidence-citing stub. It does not call OpenAI or another hosted model.
+- An optional local Python/Hugging Face process generates and decodes steganographic carrier text. The Go server starts it once and reuses it.
 
-## Structure
+The server imports `apps/server/data/source/sunken-garden-and-cs-building.zip` into SQLite on startup. Import is transactional and idempotent, so deleting the development database and restarting reconstructs it from the source archive.
 
-```text
-apps/
-  web/       Vue application (dashboard, station browser)
-  server/    Express API and SQLite database
-    src/index.ts     HTTP routes and server mode selection
-    src/db.ts        SQLite schema, migration, and queries
-    src/import.ts    CSV dataset import and derived sender profiles
-    src/csv.ts       RFC-4180 CSV parser
-    src/ai.ts        LLM incident brief (only loaded in full mode)
-    src/import.test.ts  node:test suite for the dataset import
-packages/
-  common/    Shared TypeScript types and validation schemas
-hackathon/   Focused problem and dataset notes
-```
+## Quick Start: Dashboard
 
-## Dataset import
-
-On every startup the server imports `hackathon/dataset` into SQLite in a single transaction:
-
-- `broadcast_message_log.csv` — all 300 broadcasts, preserving quoted fields (commas inside quotes), empty `message_text`, and empty `signal_strength` (stored as `NULL`).
-- `sender_history.csv` — 9 sender profiles imported verbatim. The `location` column is not part of the file, so it is taken from each sender's latest broadcast.
-- Sender IDs that appear in the broadcast log but not in `sender_history.csv` (Outpost-Epsilon, Outpost-Theta, Outpost-Zeta, Mini-Marv-04, Mini-Marv-05) get deterministic derived profiles: sender type from the name prefix, first/last seen from broadcast timestamps, reliability from the genuine-label ratio, and `current_status` (`gone_quiet` when silent 72+ hours against the dataset's latest broadcast).
-
-The import is idempotent (`INSERT OR IGNORE`), so deleting the database file restores the full dataset on the next startup. Schema changes are tracked with `PRAGMA user_version`; older databases are dropped and re-imported automatically.
-
-## Server modes
-
-- **Dataset-only (default):** unless `STEGANOGRAPHY_ENABLED=true`, the server never loads or launches an LLM. `POST /api/ai/incident-summary` returns `403`, and all dataset/station APIs work fully offline.
-- **Full:** set `STEGANOGRAPHY_ENABLED=true` (and `OPENAI_API_KEY`) to enable the AI incident brief.
-
-`GET /api/health` reports the active mode and dataset counts:
-
-```json
-{ "ok": true, "mode": "dataset-only", "counts": { "stations": 14, "broadcasts": 300 } }
-```
-
-## API
-
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | `/api/health` | Mode and dataset counts |
-| GET | `/api/dashboard` | Outpost watchlist, risk stats, recent broadcasts |
-| GET | `/api/stations` | All stations (read-only) |
-| GET | `/api/stations/:senderId/broadcasts` | Broadcasts for one station, `404` for unknown senders |
-| POST | `/api/ai/incident-summary` | AI brief in full mode, `403` in dataset-only mode |
-
-## Run locally
-
-Requires Node.js 22+ and pnpm 10+.
+Requirements: Node.js 22+, pnpm 10+, Go 1.22+, and Python 3.10+ only if enabling steganography.
 
 ```bash
 pnpm install
-cp .env.example apps/server/.env
+cp apps/server/.env.example apps/server/.env
+pnpm dev:data
+```
+
+Open <http://localhost:5173>. The API runs at <http://localhost:3001>, and Vite proxies `/api` requests to it.
+
+On first startup, the server creates one account for every imported station. Use any station ID as the username, for example `Outpost-Alpha`, with the local demo password `station-demo` unless `STATION_ACCOUNT_DEFAULT_PASSWORD` is changed in `apps/server/.env`.
+
+`pnpm dev:data` explicitly disables the Python model. The full dataset, dashboard, station history, SQLite persistence, and deterministic incident summary remain available.
+
+## Run the Go Backend Only
+
+Use this when you want the API without the Vite frontend. From the repository root, install dependencies once and create the server env file:
+
+```bash
+pnpm install
+cp apps/server/.env.example apps/server/.env
+```
+
+Start the Go API in data-only mode:
+
+```bash
+cd apps/server
+STEGANOGRAPHY_ENABLED=false go run .
+```
+
+The backend listens on <http://localhost:3001> by default. On first startup it creates/migrates `apps/server/data/silent-outposts.db`, imports the source archive, and seeds one login account per station. Use a station ID such as `Outpost-Alpha` with password `station-demo` unless you changed `STATION_ACCOUNT_DEFAULT_PASSWORD`.
+
+To use a different port:
+
+```bash
+cd apps/server
+PORT=3002 STEGANOGRAPHY_ENABLED=false go run .
+```
+
+Quick health and authenticated API checks:
+
+```bash
+curl http://localhost:3001/api/health
+
+TOKEN="$(curl -s http://localhost:3001/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"Outpost-Alpha","password":"station-demo"}' \
+  | node -pe 'JSON.parse(require("node:fs").readFileSync(0, "utf8")).token')"
+
+curl http://localhost:3001/api/dashboard -H "Authorization: Bearer $TOKEN"
+```
+
+You can also run the backend through pnpm:
+
+```bash
+pnpm --filter @vts/server dev:data
+```
+
+Enable the full steganography backend only after setting up the Python model in the next section and setting `STEGANOGRAPHY_ENABLED=true` in `apps/server/.env`.
+
+## Headline Demo: Conversation Steganography
+
+The steganography feature needs a local Hugging Face model. Set it up and run its preflight once:
+
+```bash
+python3 -m venv apps/server/.venv
+apps/server/.venv/bin/python -m pip install --upgrade pip
+apps/server/.venv/bin/python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+apps/server/.venv/bin/python -m pip install transformers huggingface-hub
+cd apps/server
+printf '%s\n' '{"op":"info"}' | ./.venv/bin/python conversationstenography/python/hf_model.py --model gpt2 --revision main --device cpu --dtype float32
+```
+
+The first preflight downloads GPT-2 and may take several minutes. Success prints JSON containing `"ok":true` and an `hf:` model fingerprint. Then set `STEGANOGRAPHY_ENABLED=true` in `apps/server/.env`, return to the repository root, and run:
+
+```bash
 pnpm dev
 ```
 
-Open <http://localhost:5173>. The API runs on <http://localhost:3001> and Vite proxies `/api` to it.
+Both participants must use the same model revision, tokenizer, protocol settings, conversation ID, message order, sender spelling, and shared phrase. Carrier text must be copied exactly.
+
+See [Local demo setup](docs/local-demo.md) for configuration and troubleshooting, and [Conversation steganography integration](docs/steganography-integration.md) for its API and synchronization contract.
+
+## Data and Privacy
+
+- SQLite stores station/archive data and public carrier transcript records.
+- Station accounts and expiring session token hashes are stored in SQLite; raw session tokens live only in the current browser tab's `sessionStorage`.
+- Shared phrases, derived keys, and plaintext messages are never persisted.
+- A phrase may be kept in the current browser tab's `sessionStorage`; it must not enter URLs, logs, analytics, or durable browser storage.
+- Steganography is experimental proof-of-concept software, not audited cryptography and not guaranteed to be undetectable. Use TLS outside this local demo.
 
 ## Commands
 
 ```bash
-pnpm dev        # run all packages in watch mode
-pnpm build      # production builds
-pnpm typecheck  # check all TypeScript projects
-pnpm test       # server dataset-import tests (node:test)
-pnpm start      # run the built API
+pnpm dev        # dashboard plus steganography when enabled in apps/server/.env
+pnpm dev:data   # dashboard with the model forcibly disabled
+pnpm typecheck  # TypeScript checks and Go tests
+pnpm build      # production frontend and backend builds
+pnpm start      # run the previously built Go API
 ```
+
+Focused backend checks:
+
+```bash
+cd apps/server
+go test ./...
+go vet ./...
+cd conversationstenography
+go test ./...
+go vet ./...
+```
+
+## License Warning
+
+`apps/server/conversationstenography` is derived from GPL-3.0 software and is linked directly into the Go backend. Distributing the combined backend may impose GPL-3.0 obligations. Preserve its license and source notices, and review [the integration notes](docs/steganography-integration.md#license) before distributing or deploying the application. This is not legal advice.
